@@ -1,5 +1,30 @@
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { DueToday } from "@/components/dashboard/DueToday";
+import { StatsCards } from "@/components/dashboard/StatsCards";
+import { Streak } from "@/components/dashboard/Streak";
+import { MasteryProgress } from "@/components/dashboard/MasteryProgress";
+import { RecentActivity } from "@/components/dashboard/RecentActivity";
+
+function calculateStreak(dates: Date[]): number {
+  if (dates.length === 0) return 0;
+
+  const sorted = [...new Set(dates.map((d) => d.toDateString()))]
+    .map((s) => new Date(s))
+    .sort((a, b) => b.getTime() - a.getTime());
+
+  let streak = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    const expected = new Date(sorted[0]);
+    expected.setDate(expected.getDate() - i);
+    if (sorted[i].toDateString() === expected.toDateString()) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+}
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabaseClient();
@@ -14,17 +39,42 @@ export default async function DashboardPage() {
 
   const today = new Date().toISOString().split("T")[0];
 
-  const { data: dueProblems } = await supabase
-    .from("leetcode_problems")
-    .select("*")
-    .eq("user_id", user.id)
-    .lte("next_review_date", today)
-    .neq("status", "mastered");
+  const [dueResult, problemsResult, dsaResult, codingResult, interviewResult, sdResult] =
+    await Promise.all([
+      supabase
+        .from("leetcode_problems")
+        .select("*")
+        .eq("user_id", user.id)
+        .lte("next_review_date", today)
+        .neq("status", "mastered"),
+      supabase
+        .from("leetcode_problems")
+        .select("difficulty, status, date_solved, created_at, question, id, problem_number, programming_language")
+        .eq("user_id", user.id),
+      supabase
+        .from("dsa_concepts")
+        .select("topic, date_studied, created_at")
+        .eq("user_id", user.id),
+      supabase
+        .from("coding_questions")
+        .select("question, date_created, created_at")
+        .eq("user_id", user.id),
+      supabase
+        .from("interview_questions")
+        .select("question, created_at")
+        .eq("user_id", user.id),
+      supabase
+        .from("system_design")
+        .select("question, created_at")
+        .eq("user_id", user.id),
+    ]);
 
-  const dueIds =
-    dueProblems
-      ?.filter((p) => p.status === "in_progress")
-      .map((p) => p.id) ?? [];
+  const dueProblems = dueResult.data ?? [];
+  const allProblems = problemsResult.data ?? [];
+
+  const dueIds = dueProblems
+    .filter((p) => p.status === "in_progress")
+    .map((p) => p.id);
 
   if (dueIds.length > 0) {
     await supabase
@@ -33,9 +83,56 @@ export default async function DashboardPage() {
       .in("id", dueIds);
   }
 
-  const updatedStatus = dueProblems?.map((p) =>
+  const updatedStatus = dueProblems.map((p) =>
     p.status === "in_progress" ? { ...p, status: "due_for_review" as const } : p
   );
+
+  const difficultyCounts = {
+    easy: allProblems.filter((p) => p.difficulty === "easy").length,
+    medium: allProblems.filter((p) => p.difficulty === "medium").length,
+    hard: allProblems.filter((p) => p.difficulty === "hard").length,
+  };
+
+  const mastered = allProblems.filter((p) => p.status === "mastered").length;
+  const total = allProblems.length;
+
+  const streakDates: Date[] = [];
+  (problemsResult.data ?? []).forEach((p) => {
+    if (p.date_solved) streakDates.push(new Date(p.date_solved));
+    streakDates.push(new Date(p.created_at));
+  });
+  (dsaResult.data ?? []).forEach((d) => {
+    if (d.date_studied) streakDates.push(new Date(d.date_studied));
+    streakDates.push(new Date(d.created_at));
+  });
+  (codingResult.data ?? []).forEach((c) => {
+    if (c.date_created) streakDates.push(new Date(c.date_created));
+    streakDates.push(new Date(c.created_at));
+  });
+  (interviewResult.data ?? []).forEach((i) => streakDates.push(new Date(i.created_at)));
+  (sdResult.data ?? []).forEach((s) => streakDates.push(new Date(s.created_at)));
+
+  const streak = calculateStreak(streakDates);
+
+  const recent: { id: string; type: string; label: string; title: string; date: string }[] = [];
+  (problemsResult.data ?? []).forEach((p) =>
+    recent.push({ id: p.id, type: "LeetCode", label: "LeetCode", title: `#${p.problem_number} ${p.question}`, date: p.created_at })
+  );
+  (dsaResult.data ?? []).forEach((d) =>
+    recent.push({ id: d.topic, type: "DSA", label: "DSA", title: d.topic, date: d.created_at })
+  );
+  (codingResult.data ?? []).forEach((c) =>
+    recent.push({ id: c.question, type: "Coding", label: "Coding", title: c.question, date: c.created_at })
+  );
+  (interviewResult.data ?? []).forEach((i) =>
+    recent.push({ id: i.question, type: "Interview", label: "Interview", title: i.question, date: i.created_at })
+  );
+  (sdResult.data ?? []).forEach((s) =>
+    recent.push({ id: s.question, type: "System Design", label: "System Design", title: s.question, date: s.created_at })
+  );
+
+  recent.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const recentActivity = recent.slice(0, 5);
 
   return (
     <div className="space-y-8">
@@ -46,11 +143,27 @@ export default async function DashboardPage() {
         </p>
       </div>
 
+      <div className="grid grid-cols-4 gap-4">
+        <div className="col-span-3">
+          <StatsCards counts={difficultyCounts} />
+        </div>
+        <Streak count={streak} />
+      </div>
+
+      <MasteryProgress mastered={mastered} total={total} />
+
       <section>
         <h2 className="mb-4 text-lg font-semibold text-zinc-900">
           Due Today
         </h2>
-        <DueToday problems={updatedStatus ?? []} />
+        <DueToday problems={updatedStatus} />
+      </section>
+
+      <section>
+        <h2 className="mb-4 text-lg font-semibold text-zinc-900">
+          Recent Activity
+        </h2>
+        <RecentActivity entries={recentActivity} />
       </section>
     </div>
   );

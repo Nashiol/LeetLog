@@ -283,7 +283,7 @@ export function ProblemDetail({
       )}
 
       {problem.notes && (
-        <div className="hud-card rounded-lg p-5">
+        <div className="hud-card rounded-lg p-5 xl:col-span-7">
           <p className="font-mono text-label-caps uppercase text-on-surface-variant">Notes</p>
           <p className="mt-2 whitespace-pre-wrap text-sm text-on-surface-variant">
             {problem.notes}
@@ -292,7 +292,7 @@ export function ProblemDetail({
       )}
 
       {problem.status === "due_for_review" && (
-        <Button onClick={() => setShowReview(true)}>
+        <Button className="xl:col-span-7" onClick={() => setShowReview(true)}>
           Review Now
         </Button>
       )}

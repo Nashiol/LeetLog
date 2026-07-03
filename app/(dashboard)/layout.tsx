@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { SidebarNav } from "@/components/shared/SidebarNav";
 import { DashboardHeader } from "@/components/shared/DashboardHeader";
@@ -26,9 +27,13 @@ export default async function DashboardLayout({
       <aside className="fixed left-0 top-0 z-40 hidden h-screen w-sidebar-width flex-col overflow-y-auto border-r border-outline-variant bg-surface-container-low md:flex">
         <div className="px-6 py-7">
           <Link href="/dashboard" className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-on-primary-container font-bold">
-              L
-            </span>
+            <Image
+              src="/images/logo.jpg"
+              alt="LeetLog"
+              width={40}
+              height={40}
+              className="rounded-lg"
+            />
             <span>
               <span className="block text-2xl font-bold tracking-tight text-primary">LeetLog</span>
               <span className="font-mono text-label-mono uppercase tracking-[0.16em] text-on-surface-variant">

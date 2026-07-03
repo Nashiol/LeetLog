@@ -77,7 +77,7 @@ export default async function DashboardLayout({
       <div className="flex min-h-screen flex-1 flex-col md:ml-sidebar-width">
         <DashboardHeader name={name} initial={initial} />
         <main className="flex-1 overflow-x-hidden bg-background p-container-padding">
-          <div className="mx-auto max-w-[1400px]">{children}</div>
+          <div className="mx-auto max-w-350">{children}</div>
         </main>
       </div>
     </div>

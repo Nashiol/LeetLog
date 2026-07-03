@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { CodingNotesModal } from "@/components/coding/CodingNotesModal";
 import type { CodingQuestion } from "@/types";
 
 export function CodingList({
@@ -12,6 +13,7 @@ export function CodingList({
   const [questions, setQuestions] = useState(initial);
   const [showAdd, setShowAdd] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [viewingId, setViewingId] = useState<string | null>(null);
 
   const [form, setForm] = useState({
     question: "",
@@ -104,6 +106,8 @@ export function CodingList({
 
     if (res.ok) {
       setQuestions((prev) => prev.filter((q) => q.id !== id));
+      if (viewingId === id) setViewingId(null);
+      if (editingId === id) setEditingId(null);
     }
   }
 
@@ -125,6 +129,7 @@ export function CodingList({
   }
 
   const activeForm = showAdd || editingId !== null;
+  const viewingQuestion = viewingId ? questions.find((q) => q.id === viewingId) ?? null : null;
 
   return (
     <div className="space-y-4">
@@ -215,7 +220,7 @@ export function CodingList({
               <th className="px-6 py-4">Question</th>
               <th className="px-6 py-4">Repository</th>
               <th className="px-6 py-4">Date Created</th>
-              <th className="px-6 py-4">Actions</th>
+              <th className="px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -252,14 +257,29 @@ export function CodingList({
                     <td className="px-6 py-4 font-mono text-label-mono text-on-surface-variant">
                       {q.date_created}
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <Button variant="outline" onClick={() => startEdit(q)}>
-                          Edit
-                        </Button>
-                        <Button variant="danger" onClick={() => handleDelete(q.id)}>
-                          Delete
-                        </Button>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          onClick={() => setViewingId(q.id)}
+                          className="rounded-lg p-1.5 text-on-surface-variant transition hover:bg-surface-container-highest hover:text-on-surface"
+                          title="View Notes"
+                        >
+                          <span className="material-symbols-outlined text-lg">visibility</span>
+                        </button>
+                        <button
+                          onClick={() => startEdit(q)}
+                          className="rounded-lg p-1.5 text-on-surface-variant transition hover:bg-surface-container-highest hover:text-on-surface"
+                          title="Edit"
+                        >
+                          <span className="material-symbols-outlined text-lg">edit</span>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(q.id)}
+                          className="rounded-lg p-1.5 text-[#F87171] transition hover:bg-[#3A1818] hover:text-[#FCA5A5]"
+                          title="Delete"
+                        >
+                          <span className="material-symbols-outlined text-lg">delete</span>
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -269,6 +289,23 @@ export function CodingList({
           </tbody>
         </table>
       </div>
+
+      {viewingQuestion && (
+        <CodingNotesModal
+          question={viewingQuestion}
+          onClose={() => setViewingId(null)}
+          onEdit={() => {
+            const q = viewingQuestion;
+            setViewingId(null);
+            startEdit(q);
+          }}
+          onDelete={() => {
+            const id = viewingQuestion.id;
+            setViewingId(null);
+            handleDelete(id);
+          }}
+        />
+      )}
     </div>
   );
 }

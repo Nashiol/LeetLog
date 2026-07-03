@@ -1,15 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
-
-const navItems = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "LeetCode", href: "/leetcode" },
-  { label: "DSA", href: "/dsa" },
-  { label: "Interview", href: "/interview" },
-  { label: "Coding", href: "/coding" },
-  { label: "System Design", href: "/system-design" },
-];
+import { SidebarNav } from "@/components/shared/SidebarNav";
 
 export default async function DashboardLayout({
   children,
@@ -36,17 +28,7 @@ export default async function DashboardLayout({
           </Link>
         </div>
 
-        <nav className="flex-1 space-y-1 p-3">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="block rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <SidebarNav />
 
         <div className="border-t border-zinc-200 p-3">
           <p className="truncate px-3 text-sm text-zinc-500">{name}</p>

@@ -9,9 +9,11 @@ import { HelpPanel } from "./HelpPanel";
 export function DashboardHeader({
   name,
   initial,
+  onMenuClick,
 }: {
   name: string;
   initial: string;
+  onMenuClick?: () => void;
 }) {
   const [helpOpen, setHelpOpen] = useState(false);
 
@@ -19,6 +21,13 @@ export function DashboardHeader({
     <>
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-outline-variant bg-background px-container-padding">
         <div className="flex items-center gap-4">
+          <button
+            onClick={onMenuClick}
+            className="rounded-lg p-2 text-on-surface-variant transition hover:bg-surface-variant hover:text-on-surface md:hidden"
+            aria-label="Toggle sidebar"
+          >
+            <span className="material-symbols-outlined">menu</span>
+          </button>
           <Link href="/dashboard" className="text-xl font-bold text-primary md:hidden">
             LeetLog
           </Link>

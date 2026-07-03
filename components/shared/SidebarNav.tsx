@@ -12,7 +12,7 @@ const navItems = [
   { label: "System Design", href: "/system-design", icon: "schema" },
 ];
 
-export function SidebarNav() {
+export function SidebarNav({ onClick }: { onClick?: () => void }) {
   const pathname = usePathname();
 
   return (
@@ -27,6 +27,7 @@ export function SidebarNav() {
           <Link
             key={item.href}
             href={item.href}
+            onClick={onClick}
             className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition-colors ${
               isActive
                 ? "-ml-3 rounded-l-none border-l-[3px] border-primary bg-surface-container-high pl-[25px] font-bold text-on-surface"

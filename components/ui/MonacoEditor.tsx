@@ -6,7 +6,7 @@ import { type ComponentProps } from "react";
 const Editor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-64 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 text-sm text-zinc-400">
+    <div className="flex h-64 items-center justify-center rounded-lg border border-outline-variant bg-[#050505] font-mono text-label-mono text-on-surface-variant">
       Loading editor...
     </div>
   ),

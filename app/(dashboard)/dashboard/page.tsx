@@ -137,14 +137,14 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-zinc-500">
-          Welcome back, {user.user_metadata?.name ?? user.email}
+        <h1 className="text-display font-bold tracking-tight text-on-surface">Dashboard</h1>
+        <p className="mt-2 text-body-lg text-on-surface-variant">
+          Welcome back. You have {updatedStatus.length} problem{updatedStatus.length === 1 ? "" : "s"} due for review today.
         </p>
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
-        <div className="col-span-3">
+      <div className="grid grid-cols-1 gap-card-gap xl:grid-cols-4">
+        <div className="xl:col-span-3">
           <StatsCards counts={difficultyCounts} />
         </div>
         <Streak count={streak} />
@@ -152,19 +152,27 @@ export default async function DashboardPage() {
 
       <MasteryProgress mastered={mastered} total={total} />
 
-      <section>
-        <h2 className="mb-4 text-lg font-semibold text-zinc-900">
-          Due Today
-        </h2>
-        <DueToday problems={updatedStatus} />
-      </section>
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <section className="lg:col-span-2">
+          <div className="mb-4 flex items-center justify-between border-b border-outline-variant pb-3">
+            <h2 className="flex items-center gap-2 text-headline-lg font-semibold text-on-surface">
+              <span className="material-symbols-outlined text-primary">schedule</span>
+              Due Today
+            </h2>
+          </div>
+          <DueToday problems={updatedStatus} />
+        </section>
 
-      <section>
-        <h2 className="mb-4 text-lg font-semibold text-zinc-900">
-          Recent Activity
-        </h2>
-        <RecentActivity entries={recentActivity} />
-      </section>
+        <section>
+          <div className="mb-4 flex items-center justify-between border-b border-outline-variant pb-3">
+            <h2 className="flex items-center gap-2 text-headline-lg font-semibold text-on-surface">
+              <span className="material-symbols-outlined text-on-surface-variant">history</span>
+              Recent Activity
+            </h2>
+          </div>
+          <RecentActivity entries={recentActivity} />
+        </section>
+      </div>
     </div>
   );
 }

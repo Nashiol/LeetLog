@@ -55,21 +55,21 @@ export function ProblemTable({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name or number..."
-            className="w-64 rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+            className="field-dark h-10 w-full px-3 py-2 text-sm sm:w-72"
           />
           <select
             value={difficultyFilter}
             onChange={(e) =>
               setDifficultyFilter(e.target.value as Difficulty | "all")
             }
-            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+            className="field-dark h-10 px-3 py-2 text-sm"
           >
             <option value="all">All Difficulties</option>
             <option value="easy">Easy</option>
@@ -82,23 +82,23 @@ export function ProblemTable({
         </Button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
-        <table className="w-full text-sm">
+      <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low">
+        <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-zinc-200 bg-zinc-50 text-left text-xs font-medium uppercase text-zinc-500">
-              <th className="px-4 py-3">#</th>
-              <th className="px-4 py-3">Title</th>
-              <th className="px-4 py-3">Difficulty</th>
-              <th className="px-4 py-3">Language</th>
-              <th className="px-4 py-3">Date Solved</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Next Review</th>
+            <tr className="border-b border-outline-variant bg-surface-container-lowest/50 font-mono text-label-caps uppercase text-on-surface-variant">
+              <th className="px-6 py-4">#</th>
+              <th className="px-6 py-4">Title</th>
+              <th className="px-6 py-4">Difficulty</th>
+              <th className="px-6 py-4">Language</th>
+              <th className="px-6 py-4">Date Solved</th>
+              <th className="px-6 py-4">Status</th>
+              <th className="px-6 py-4">Next Review</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-outline-variant font-mono text-label-mono">
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-12 text-center text-zinc-400">
+                <td colSpan={7} className="px-6 py-12 text-center text-on-surface-variant">
                   No problems found.
                 </td>
               </tr>
@@ -107,31 +107,31 @@ export function ProblemTable({
                 <tr
                   key={problem.id}
                   onClick={() => router.push(`/leetcode/${problem.id}`)}
-                  className="cursor-pointer border-b border-zinc-100 transition-colors hover:bg-zinc-50"
+                  className="group cursor-pointer transition-colors hover:bg-surface-container-highest"
                 >
-                  <td className="px-4 py-3 font-mono text-zinc-700">
+                  <td className="px-6 py-4 text-on-surface-variant">
                     {problem.problem_number}
                   </td>
-                  <td className="px-4 py-3 font-medium text-zinc-900">
+                  <td className="px-6 py-4 font-sans text-sm font-semibold text-on-surface transition group-hover:text-primary">
                     {problem.question}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-6 py-4">
                     <Badge variant={difficultyVariants[problem.difficulty]}>
                       {problem.difficulty}
                     </Badge>
                   </td>
-                  <td className="px-4 py-3 text-zinc-600">
+                  <td className="px-6 py-4 text-on-surface">
                     {problem.programming_language}
                   </td>
-                  <td className="px-4 py-3 text-zinc-600">
+                  <td className="px-6 py-4 text-on-surface-variant">
                     {problem.date_solved}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-6 py-4">
                     <Badge variant={statusVariants[problem.status]}>
                       {statusLabels[problem.status]}
                     </Badge>
                   </td>
-                  <td className="px-4 py-3 text-zinc-600">
+                  <td className="px-6 py-4 text-on-surface-variant">
                     {problem.next_review_date}
                   </td>
                 </tr>

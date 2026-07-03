@@ -7,11 +7,11 @@ type ActivityEntry = {
 };
 
 const typeColors: Record<string, string> = {
-  LeetCode: "bg-blue-100 text-blue-700",
-  DSA: "bg-purple-100 text-purple-700",
-  Interview: "bg-pink-100 text-pink-700",
-  Coding: "bg-cyan-100 text-cyan-700",
-  "System Design": "bg-amber-100 text-amber-700",
+  LeetCode: "border-primary",
+  DSA: "border-tertiary-container",
+  Interview: "border-[#F472B6]",
+  Coding: "border-[#4ADE80]",
+  "System Design": "border-[#FBBF24]",
 };
 
 export function RecentActivity({
@@ -22,7 +22,7 @@ export function RecentActivity({
   if (entries.length === 0) {
     return (
       <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center">
-        <p className="text-sm text-zinc-400">No recent activity.</p>
+        <p className="text-sm text-on-surface-variant">No recent activity.</p>
       </div>
     );
   }
@@ -38,27 +38,30 @@ export function RecentActivity({
   }
 
   return (
-    <div className="space-y-1">
+    <div className="hud-card rounded-xl p-5">
+      <div className="relative ml-3 space-y-6 border-l-2 border-outline-variant">
       {entries.map((entry) => (
         <div
           key={`${entry.type}-${entry.id}`}
-          className="flex items-center justify-between rounded-lg px-4 py-3 transition-colors hover:bg-zinc-50"
+          className="relative flex items-start justify-between gap-4 pl-6"
         >
-          <div className="flex items-center gap-3 min-w-0">
+          <span className={`absolute -left-[9px] top-1 h-4 w-4 rounded-full border-2 bg-surface-container-low ${typeColors[entry.type] ?? "border-outline-variant"}`} />
+          <div className="min-w-0">
             <span
-              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium shrink-0 ${typeColors[entry.type] ?? "bg-zinc-100 text-zinc-700"}`}
+              className="font-mono text-label-mono text-primary"
             >
               {entry.label}
             </span>
-            <span className="truncate text-sm font-medium text-zinc-900">
+            <span className="mt-1 block truncate text-sm font-medium text-on-surface">
               {entry.title}
             </span>
           </div>
-          <span className="shrink-0 text-xs text-zinc-400">
+          <span className="shrink-0 font-mono text-xs text-on-surface-variant">
             {timeAgo(entry.date)}
           </span>
         </div>
       ))}
+      </div>
     </div>
   );
 }

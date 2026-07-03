@@ -20,7 +20,10 @@ export default async function DSAPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-zinc-900">DSA Concepts</h1>
+      <div className="mb-8">
+        <h1 className="text-display font-bold tracking-tight text-on-surface">Data Structures & Algorithms</h1>
+        <p className="mt-2 text-body-lg text-on-surface-variant">Track your foundational knowledge and core concepts.</p>
+      </div>
       <DSATable concepts={concepts ?? []} />
     </div>
   );

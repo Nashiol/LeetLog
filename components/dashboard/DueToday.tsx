@@ -13,11 +13,11 @@ const difficultyVariants = {
 export function DueToday({ problems }: { problems: LeetCodeProblem[] }) {
   if (problems.length === 0) {
     return (
-      <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center">
-        <p className="text-lg font-medium text-zinc-500">
+      <div className="hud-card rounded-xl p-8 text-center">
+        <p className="text-headline-md font-semibold text-on-surface">
           Nothing due today
         </p>
-        <p className="mt-1 text-sm text-zinc-400">
+        <p className="mt-1 text-sm text-on-surface-variant">
           Add a LeetCode problem to get started.
         </p>
       </div>
@@ -25,20 +25,20 @@ export function DueToday({ problems }: { problems: LeetCodeProblem[] }) {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {problems.map((problem) => (
         <div
           key={problem.id}
-          className="flex items-center justify-between rounded-xl border border-zinc-200 bg-white px-5 py-4"
+          className="hud-card group flex flex-col gap-4 rounded-lg p-5 transition hover:border-primary/50 sm:flex-row sm:items-center sm:justify-between"
         >
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-sm text-zinc-400">
+          <div className="flex items-start gap-4">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-outline-variant bg-[#222222] font-mono text-label-mono text-on-surface-variant">
               #{problem.problem_number}
             </span>
             <div>
               <Link
                 href={`/leetcode/${problem.id}`}
-                className="font-medium text-zinc-900 hover:underline"
+                className="text-headline-md font-semibold text-on-surface transition group-hover:text-primary"
               >
                 {problem.question}
               </Link>
@@ -46,7 +46,7 @@ export function DueToday({ problems }: { problems: LeetCodeProblem[] }) {
                 <Badge variant={difficultyVariants[problem.difficulty]}>
                   {problem.difficulty}
                 </Badge>
-                <span className="text-xs text-zinc-400">
+                <span className="font-mono text-label-mono text-on-surface-variant">
                   {problem.programming_language}
                 </span>
               </div>
@@ -54,7 +54,7 @@ export function DueToday({ problems }: { problems: LeetCodeProblem[] }) {
           </div>
           <Link
             href={`/leetcode/${problem.id}`}
-            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
+            className="rounded-lg bg-primary px-5 py-2 text-sm font-bold text-on-primary-container transition hover:brightness-110"
           >
             Review Now
           </Link>

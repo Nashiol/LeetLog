@@ -3,7 +3,10 @@ import { DSAForm } from "@/components/dsa/DSAForm";
 export default function NewDSAPage() {
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-zinc-900">Add DSA Concept</h1>
+      <div className="mb-8">
+        <h1 className="text-headline-lg font-semibold text-on-surface">Add DSA Concept</h1>
+        <p className="mt-1 text-sm text-on-surface-variant">Capture a study session and mark your current mastery level.</p>
+      </div>
       <DSAForm />
     </div>
   );

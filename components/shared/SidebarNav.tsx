@@ -4,19 +4,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "LeetCode", href: "/leetcode" },
-  { label: "DSA", href: "/dsa" },
-  { label: "Interview", href: "/interview" },
-  { label: "Coding", href: "/coding" },
-  { label: "System Design", href: "/system-design" },
+  { label: "Dashboard", href: "/dashboard", icon: "dashboard" },
+  { label: "LeetCode", href: "/leetcode", icon: "code" },
+  { label: "DSA", href: "/dsa", icon: "account_tree" },
+  { label: "Interview Questions", href: "/interview", icon: "question_answer" },
+  { label: "Coding Questions", href: "/coding", icon: "terminal" },
+  { label: "System Design", href: "/system-design", icon: "schema" },
 ];
 
 export function SidebarNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex-1 space-y-1 p-3">
+    <nav className="flex-1 space-y-1 px-3 py-4">
       {navItems.map((item) => {
         const isActive =
           item.href === "/dashboard"
@@ -27,13 +27,16 @@ export function SidebarNav() {
           <Link
             key={item.href}
             href={item.href}
-            className={`block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+            className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition-colors ${
               isActive
-                ? "bg-zinc-100 text-zinc-900"
-                : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+                ? "-ml-3 rounded-l-none border-l-[3px] border-primary bg-surface-container-high pl-[25px] font-bold text-on-surface"
+                : "font-medium text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface"
             }`}
           >
-            {item.label}
+            <span className={`material-symbols-outlined ${isActive ? "text-primary" : ""}`}>
+              {item.icon}
+            </span>
+            <span>{item.label}</span>
           </Link>
         );
       })}

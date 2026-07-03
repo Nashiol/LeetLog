@@ -51,9 +51,9 @@ export default function SignupPage() {
   if (confirmed) {
     return (
       <div className="text-center">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#1A3A32]">
           <svg
-            className="h-6 w-6 text-green-600"
+            className="h-6 w-6 text-[#4ADE80]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -66,16 +66,16 @@ export default function SignupPage() {
             />
           </svg>
         </div>
-        <h2 className="text-lg font-semibold text-zinc-900">
+        <h2 className="text-lg font-semibold text-on-surface">
           Check your email
         </h2>
-        <p className="mt-2 text-sm text-zinc-500">
-          We sent a confirmation link to <strong>{email}</strong>.
+        <p className="mt-2 text-sm text-on-surface-variant">
+          We sent a confirmation link to <strong className="text-on-surface">{email}</strong>.
           Click the link to activate your account.
         </p>
         <Link
           href="/login"
-          className="mt-6 inline-block text-sm font-medium text-zinc-900 underline underline-offset-2"
+          className="mt-6 inline-block text-sm font-medium text-primary underline underline-offset-2"
         >
           Go to sign in
         </Link>
@@ -88,7 +88,7 @@ export default function SignupPage() {
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-medium text-zinc-700"
+          className="block font-mono text-label-caps uppercase text-on-surface-variant"
         >
           Name
         </label>
@@ -97,7 +97,7 @@ export default function SignupPage() {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+          className="field-dark mt-1 w-full px-3 py-2.5 text-sm"
           placeholder="John Doe"
           autoComplete="name"
         />
@@ -106,7 +106,7 @@ export default function SignupPage() {
       <div>
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-zinc-700"
+          className="block font-mono text-label-caps uppercase text-on-surface-variant"
         >
           Email
         </label>
@@ -115,7 +115,7 @@ export default function SignupPage() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+          className="field-dark mt-1 w-full px-3 py-2.5 text-sm"
           placeholder="you@example.com"
           autoComplete="email"
         />
@@ -124,7 +124,7 @@ export default function SignupPage() {
       <div>
         <label
           htmlFor="password"
-          className="block text-sm font-medium text-zinc-700"
+          className="block font-mono text-label-caps uppercase text-on-surface-variant"
         >
           Password
         </label>
@@ -133,27 +133,27 @@ export default function SignupPage() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+          className="field-dark mt-1 w-full px-3 py-2.5 text-sm"
           placeholder="••••••••"
           autoComplete="new-password"
         />
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-[#F87171]">{error}</p>}
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
+        className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary-container transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
       >
         {loading ? "Creating account..." : "Create account"}
       </button>
 
-      <p className="text-center text-sm text-zinc-500">
+      <p className="text-center text-sm text-on-surface-variant">
         Already have an account?{" "}
         <Link
           href="/login"
-          className="font-medium text-zinc-900 underline underline-offset-2"
+          className="font-medium text-primary underline underline-offset-2"
         >
           Sign in
         </Link>

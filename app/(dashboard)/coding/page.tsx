@@ -20,9 +20,10 @@ export default async function CodingPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-zinc-900">
-        Coding Questions
-      </h1>
+      <div className="mb-8">
+        <h1 className="text-headline-lg font-semibold text-on-surface">Coding Questions</h1>
+        <p className="mt-1 text-sm text-on-surface-variant">Manage and track custom coding challenges and repositories.</p>
+      </div>
       <CodingList questions={questions ?? []} />
     </div>
   );

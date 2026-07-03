@@ -8,22 +8,22 @@ export function MasteryProgress({
   const pct = total > 0 ? Math.round((mastered / total) * 100) : 0;
 
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-5">
+    <div className="hud-card rounded-xl p-6">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-medium uppercase text-zinc-400">
+        <p className="font-mono text-label-caps uppercase text-on-surface-variant">
           Mastery Progress
         </p>
-        <p className="text-sm text-zinc-500">
+        <p className="font-mono text-label-mono text-on-surface-variant">
           {mastered} / {total} mastered
         </p>
       </div>
-      <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-zinc-100">
+      <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-[#2A2A2A]">
         <div
-          className="h-full rounded-full bg-green-500 transition-all"
+          className="h-full rounded-full bg-primary transition-all"
           style={{ width: `${pct}%` }}
         />
       </div>
-      <p className="mt-1 text-right text-xs text-zinc-400">{pct}%</p>
+      <p className="mt-2 text-right font-mono text-label-mono text-primary">{pct}%</p>
     </div>
   );
 }

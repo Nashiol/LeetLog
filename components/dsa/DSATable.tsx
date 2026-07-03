@@ -35,7 +35,7 @@ export function DSATable({ concepts }: { concepts: DSAConcept[] }) {
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value as MasteryLevel | "all")}
-          className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+          className="field-dark w-auto px-3 py-2 text-sm"
         >
           <option value="all">All Levels</option>
           <option value="not_started">Not Started</option>
@@ -46,20 +46,20 @@ export function DSATable({ concepts }: { concepts: DSAConcept[] }) {
         <Button onClick={() => router.push("/dsa/new")}>Add Concept</Button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-zinc-200 bg-zinc-50 text-left text-xs font-medium uppercase text-zinc-500">
-              <th className="px-4 py-3">Topic</th>
-              <th className="px-4 py-3">Resource Used</th>
-              <th className="px-4 py-3">Mastery Level</th>
-              <th className="px-4 py-3">Date Studied</th>
+            <tr className="border-b border-outline-variant bg-surface-container-lowest/50 text-left font-mono text-label-caps uppercase text-on-surface-variant">
+              <th className="px-6 py-4">Topic</th>
+              <th className="px-6 py-4">Resource Used</th>
+              <th className="px-6 py-4">Mastery Level</th>
+              <th className="px-6 py-4">Date Studied</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-outline-variant">
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-4 py-12 text-center text-zinc-400">
+                <td colSpan={4} className="px-6 py-12 text-center text-on-surface-variant">
                   No DSA concepts found.
                 </td>
               </tr>
@@ -67,20 +67,20 @@ export function DSATable({ concepts }: { concepts: DSAConcept[] }) {
               filtered.map((concept) => (
                 <tr
                   key={concept.id}
-                  className="border-b border-zinc-100 transition-colors hover:bg-zinc-50"
+                  className="transition-colors hover:bg-surface-container-highest"
                 >
-                  <td className="px-4 py-3 font-medium text-zinc-900">
+                  <td className="px-6 py-4 font-semibold text-on-surface">
                     {concept.topic}
                   </td>
-                  <td className="px-4 py-3 text-zinc-600">
+                  <td className="px-6 py-4 font-mono text-label-mono text-on-surface-variant">
                     {concept.resource_used || "—"}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-6 py-4">
                     <Badge variant={masteryVariants[concept.mastery_level]}>
                       {masteryLabels[concept.mastery_level]}
                     </Badge>
                   </td>
-                  <td className="px-4 py-3 text-zinc-600">
+                  <td className="px-6 py-4 font-mono text-label-mono text-on-surface-variant">
                     {concept.date_studied}
                   </td>
                 </tr>

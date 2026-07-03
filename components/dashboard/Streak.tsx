@@ -1,13 +1,15 @@
 export function Streak({ count }: { count: number }) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-5 text-center">
-      <p className="text-xs font-medium uppercase text-zinc-400">
+    <div className="hud-card rounded-xl p-6">
+      <p className="font-mono text-label-caps uppercase text-on-surface-variant">
         Current Streak
       </p>
-      <p className="mt-1 text-3xl font-bold text-orange-600">{count}</p>
-      <p className="text-xs text-zinc-500">
+      <div className="mt-2 flex items-end gap-3">
+        <p className="text-display font-bold text-primary">{count}</p>
+        <p className="mb-2 font-mono text-label-mono text-on-surface-variant">
         {count === 1 ? "day" : "days"}
-      </p>
+        </p>
+      </div>
     </div>
   );
 }

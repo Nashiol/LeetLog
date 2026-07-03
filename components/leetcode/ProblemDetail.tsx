@@ -98,23 +98,23 @@ export function ProblemDetail({
 
   if (editing) {
     return (
-      <div className="max-w-2xl space-y-5">
+      <div className="hud-card max-w-3xl space-y-5 rounded-lg p-6">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-zinc-700">Problem Number</label>
+            <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Problem Number</label>
             <input
               type="number"
               value={formData.problem_number}
               onChange={(e) => update("problem_number", e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+              className="field-dark mt-1 px-3 py-2.5 text-sm"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-zinc-700">Difficulty</label>
+            <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Difficulty</label>
             <select
               value={formData.difficulty}
               onChange={(e) => update("difficulty", e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+              className="field-dark mt-1 px-3 py-2.5 text-sm"
             >
               <option value="easy">Easy</option>
               <option value="medium">Medium</option>
@@ -124,32 +124,32 @@ export function ProblemDetail({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700">Title</label>
+          <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Title</label>
           <input
             type="text"
             value={formData.question}
             onChange={(e) => update("question", e.target.value)}
-            className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+            className="field-dark mt-1 px-3 py-2.5 text-sm"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700">URL</label>
+          <label className="block font-mono text-label-caps uppercase text-on-surface-variant">URL</label>
           <input
             type="url"
             value={formData.link}
             onChange={(e) => update("link", e.target.value)}
-            className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+            className="field-dark mt-1 px-3 py-2.5 text-sm"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-zinc-700">Language</label>
+            <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Language</label>
             <select
               value={formData.programming_language}
               onChange={(e) => update("programming_language", e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+              className="field-dark mt-1 px-3 py-2.5 text-sm"
             >
               <option>JavaScript</option>
               <option>TypeScript</option>
@@ -161,19 +161,19 @@ export function ProblemDetail({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-zinc-700">Date Solved</label>
+            <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Date Solved</label>
             <input
               type="date"
               value={formData.date_solved}
               onChange={(e) => update("date_solved", e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+              className="field-dark mt-1 px-3 py-2.5 text-sm"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700">Code</label>
-          <div className="mt-1 overflow-hidden rounded-lg border border-zinc-300">
+          <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Code</label>
+          <div className="mt-1 overflow-hidden rounded-lg border border-outline-variant bg-[#050505]">
             <MonacoEditor
               language={formData.programming_language.toLowerCase()}
               value={formData.code_snippet}
@@ -183,16 +183,16 @@ export function ProblemDetail({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700">Notes</label>
+          <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Notes</label>
           <textarea
             value={formData.notes}
             onChange={(e) => update("notes", e.target.value)}
             rows={4}
-            className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+            className="field-dark mt-1 px-3 py-2.5 text-sm"
           />
         </div>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-[#F87171]">{error}</p>}
 
         <div className="flex items-center gap-3">
           <Button onClick={handleSave} disabled={saving}>
@@ -207,11 +207,12 @@ export function ProblemDetail({
   }
 
   return (
-    <div className="max-w-2xl space-y-6">
-      <div className="flex items-start justify-between gap-4">
+    <div className="grid grid-cols-1 gap-card-gap xl:grid-cols-12">
+      <div className="space-y-6 xl:col-span-7">
+      <div className="hud-card relative overflow-hidden rounded-lg p-6">
         <div>
           <div className="flex items-center gap-3">
-            <span className="font-mono text-sm text-zinc-400">
+            <span className="font-mono text-label-mono text-on-surface-variant">
               #{problem.problem_number}
             </span>
             <Badge variant={difficultyVariants[problem.difficulty]}>
@@ -221,11 +222,11 @@ export function ProblemDetail({
               {statusLabels[problem.status]}
             </Badge>
           </div>
-          <h1 className="mt-2 text-2xl font-bold text-zinc-900">
+          <h1 className="mt-3 text-headline-lg font-semibold text-on-surface">
             {problem.question}
           </h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="mt-6 flex items-center gap-2">
           <Button variant="outline" onClick={() => setEditing(true)}>
             Edit
           </Button>
@@ -235,42 +236,44 @@ export function ProblemDetail({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 rounded-xl border border-zinc-200 bg-white p-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div>
-          <p className="text-xs font-medium uppercase text-zinc-400">Language</p>
-          <p className="mt-1 text-sm text-zinc-900">
+          <p className="font-mono text-label-caps uppercase text-on-surface-variant">Language</p>
+          <p className="mt-1 text-sm text-on-surface">
             {problem.programming_language}
           </p>
         </div>
         <div>
-          <p className="text-xs font-medium uppercase text-zinc-400">Date Solved</p>
-          <p className="mt-1 text-sm text-zinc-900">{problem.date_solved}</p>
+          <p className="font-mono text-label-caps uppercase text-on-surface-variant">Date Solved</p>
+          <p className="mt-1 text-sm text-on-surface">{problem.date_solved}</p>
         </div>
         <div>
-          <p className="text-xs font-medium uppercase text-zinc-400">Next Review</p>
-          <p className="mt-1 text-sm text-zinc-900">
+          <p className="font-mono text-label-caps uppercase text-on-surface-variant">Next Review</p>
+          <p className="mt-1 text-sm text-on-surface">
             {problem.next_review_date}
           </p>
         </div>
       </div>
 
-      <div>
-        <p className="text-xs font-medium uppercase text-zinc-400">Link</p>
+      <div className="hud-card rounded-lg p-5">
+        <p className="font-mono text-label-caps uppercase text-on-surface-variant">Link</p>
         <a
           href={problem.link}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-1 block text-sm text-zinc-900 underline underline-offset-2 hover:text-zinc-600"
+          className="mt-1 block break-all font-mono text-label-mono text-tertiary-container underline underline-offset-2 hover:text-tertiary"
         >
           {problem.link}
         </a>
       </div>
+      </div>
 
       {problem.code_snippet && (
-        <div>
-          <p className="text-xs font-medium uppercase text-zinc-400">Code Solution</p>
-          <div className="mt-1 overflow-hidden rounded-lg border border-zinc-300">
+        <div className="xl:col-span-5 xl:row-span-3">
+          <p className="mb-2 font-mono text-label-caps uppercase text-on-surface-variant">Code Solution</p>
+          <div className="overflow-hidden rounded-lg border border-outline-variant bg-[#050505]">
             <MonacoEditor
+              height="600px"
               language={problem.programming_language.toLowerCase()}
               value={problem.code_snippet}
               options={{ readOnly: true }}
@@ -280,9 +283,9 @@ export function ProblemDetail({
       )}
 
       {problem.notes && (
-        <div>
-          <p className="text-xs font-medium uppercase text-zinc-400">Notes</p>
-          <p className="mt-1 whitespace-pre-wrap text-sm text-zinc-700">
+        <div className="hud-card rounded-lg p-5">
+          <p className="font-mono text-label-caps uppercase text-on-surface-variant">Notes</p>
+          <p className="mt-2 whitespace-pre-wrap text-sm text-on-surface-variant">
             {problem.notes}
           </p>
         </div>

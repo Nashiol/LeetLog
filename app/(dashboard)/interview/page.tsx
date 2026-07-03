@@ -20,9 +20,10 @@ export default async function InterviewPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-zinc-900">
-        Interview Questions
-      </h1>
+      <div className="mb-8">
+        <h1 className="text-display font-bold tracking-tight text-on-surface">Interview Questions</h1>
+        <p className="mt-2 text-body-lg text-on-surface-variant">Review and master core behavioral and technical prompts.</p>
+      </div>
       <InterviewList questions={questions ?? []} />
     </div>
   );

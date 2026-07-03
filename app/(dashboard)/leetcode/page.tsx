@@ -20,7 +20,10 @@ export default async function LeetCodePage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-zinc-900">LeetCode Problems</h1>
+      <div className="mb-6">
+        <h1 className="text-headline-lg font-semibold text-on-surface">LeetCode Problem Set</h1>
+        <p className="mt-1 text-sm text-on-surface-variant">Track, review, and master algorithm challenges.</p>
+      </div>
       <ProblemTable problems={problems ?? []} />
     </div>
   );

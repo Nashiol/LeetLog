@@ -129,7 +129,7 @@ export function CodingList({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-zinc-500">{questions.length} questions</p>
+        <p className="text-sm text-on-surface-variant">{questions.length} questions</p>
         <Button onClick={() => { setShowAdd(true); setEditingId(null); resetForm(); }}>
           Add Coding Question
         </Button>
@@ -138,62 +138,62 @@ export function CodingList({
       {activeForm && (
         <form
           onSubmit={showAdd ? handleAdd : handleUpdate}
-          className="rounded-xl border border-zinc-200 bg-white p-5 space-y-4"
+          className="hud-card space-y-4 rounded-xl p-5"
         >
-          <h3 className="text-sm font-semibold text-zinc-700">
+          <h3 className="font-mono text-label-caps uppercase text-on-surface-variant">
             {showAdd ? "New Coding Question" : "Edit Coding Question"}
           </h3>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700">Question</label>
+            <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Question</label>
             <input
               type="text"
               value={form.question}
               onChange={(e) => setForm((f) => ({ ...f, question: e.target.value }))}
-              className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+              className="field-dark mt-1 w-full px-3 py-2.5 text-sm"
               placeholder="Build a URL shortener..."
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700">
+            <label className="block font-mono text-label-caps uppercase text-on-surface-variant">
               Repository Link
             </label>
             <input
               type="url"
               value={form.repository_link}
               onChange={(e) => setForm((f) => ({ ...f, repository_link: e.target.value }))}
-              className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+              className="field-dark mt-1 w-full px-3 py-2.5 text-sm"
               placeholder="https://github.com/username/repo"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-zinc-700">Date Created</label>
+              <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Date Created</label>
               <input
                 type="date"
                 value={form.date_created}
                 onChange={(e) => setForm((f) => ({ ...f, date_created: e.target.value }))}
-                className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                className="field-dark mt-1 w-full px-3 py-2.5 text-sm"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700">Notes</label>
+            <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Notes</label>
             <textarea
               value={form.notes}
               onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
               rows={3}
-              className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 shadow-sm focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900"
+              className="field-dark mt-1 w-full px-3 py-2.5 text-sm"
               placeholder="Approach, lessons learned, improvements..."
             />
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-[#F87171]">{error}</p>}
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 border-t border-outline-variant pt-4">
             <Button type="submit" disabled={saving}>
               {saving ? "Saving..." : showAdd ? "Add" : "Save"}
             </Button>
@@ -208,20 +208,20 @@ export function CodingList({
         </form>
       )}
 
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-zinc-200 bg-zinc-50 text-left text-xs font-medium uppercase text-zinc-500">
-              <th className="px-4 py-3">Question</th>
-              <th className="px-4 py-3">Repository</th>
-              <th className="px-4 py-3">Date Created</th>
-              <th className="px-4 py-3">Actions</th>
+            <tr className="border-b border-outline-variant bg-surface-container-lowest/50 text-left font-mono text-label-caps uppercase text-on-surface-variant">
+              <th className="px-6 py-4">Question</th>
+              <th className="px-6 py-4">Repository</th>
+              <th className="px-6 py-4">Date Created</th>
+              <th className="px-6 py-4">Actions</th>
             </tr>
           </thead>
           <tbody>
             {questions.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-4 py-12 text-center text-zinc-400">
+                <td colSpan={4} className="px-6 py-12 text-center text-on-surface-variant">
                   No coding questions yet.
                 </td>
               </tr>
@@ -230,29 +230,29 @@ export function CodingList({
                 editingId === q.id ? null : (
                   <tr
                     key={q.id}
-                    className="border-b border-zinc-100 transition-colors hover:bg-zinc-50"
+                    className="transition-colors hover:bg-surface-container-highest"
                   >
-                    <td className="px-4 py-3 font-medium text-zinc-900">
+                    <td className="px-6 py-4 font-semibold text-on-surface">
                       {q.question}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4">
                       {q.repository_link ? (
                         <a
                           href={q.repository_link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-zinc-600 underline underline-offset-2 hover:text-zinc-900"
+                          className="text-primary underline underline-offset-2 hover:text-primary-hover"
                         >
                           {q.repository_link}
                         </a>
                       ) : (
-                        <span className="text-zinc-400">—</span>
+                        <span className="text-on-surface-variant">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-zinc-600">
+                    <td className="px-6 py-4 font-mono text-label-mono text-on-surface-variant">
                       {q.date_created}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <Button variant="outline" onClick={() => startEdit(q)}>
                           Edit

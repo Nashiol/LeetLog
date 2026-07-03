@@ -20,9 +20,10 @@ export default async function SystemDesignPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-zinc-900">
-        System Design
-      </h1>
+      <div className="mb-8">
+        <h1 className="text-display font-bold tracking-tight text-on-surface">System Design</h1>
+        <p className="mt-2 text-body-lg text-on-surface-variant">Practice architecture prompts, company context, and tradeoffs.</p>
+      </div>
       <SystemDesignList entries={entries ?? []} />
     </div>
   );

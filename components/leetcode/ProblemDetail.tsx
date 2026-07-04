@@ -99,7 +99,7 @@ export function ProblemDetail({
   if (editing) {
     return (
       <div className="hud-card max-w-3xl space-y-5 rounded-lg p-6">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Problem Number</label>
             <input
@@ -143,7 +143,7 @@ export function ProblemDetail({
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Language</label>
             <select
@@ -273,7 +273,8 @@ export function ProblemDetail({
           <p className="mb-2 font-mono text-label-caps uppercase text-on-surface-variant">Code Solution</p>
           <div className="overflow-hidden rounded-lg border border-outline-variant bg-[#050505]">
             <MonacoEditor
-              height="600px"
+              height="400px"
+              className="md:min-h-[600px]"
               language={problem.programming_language.toLowerCase()}
               value={problem.code_snippet}
               options={{ readOnly: true }}

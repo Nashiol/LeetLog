@@ -98,7 +98,7 @@ export function ProblemForm() {
   return (
     <form onSubmit={handleSubmit} className="grid grid-cols-1 items-start gap-card-gap xl:grid-cols-12">
       <div className="hud-card space-y-5 rounded-lg p-6 xl:col-span-5">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label className="block font-mono text-label-caps uppercase text-on-surface-variant">
             Problem Number
@@ -153,7 +153,7 @@ export function ProblemForm() {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label className="block font-mono text-label-caps uppercase text-on-surface-variant">
             Language
@@ -225,7 +225,8 @@ export function ProblemForm() {
           <span className="material-symbols-outlined text-on-surface-variant">code</span>
         </div>
         <MonacoEditor
-          height="600px"
+          height="400px"
+          className="md:min-h-[600px]"
           language={languageToMonaco[formData.programming_language] ?? "javascript"}
           value={formData.code_snippet}
           onChange={(val) => update("code_snippet", val ?? "")}

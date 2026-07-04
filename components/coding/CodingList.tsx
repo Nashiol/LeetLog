@@ -213,7 +213,72 @@ export function CodingList({
         </form>
       )}
 
-      <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low">
+      {/* Mobile card list */}
+      <div className="space-y-3 sm:hidden">
+        {questions.length === 0 ? (
+          <div className="rounded-xl border border-outline-variant bg-surface-container-low px-6 py-12 text-center text-on-surface-variant">
+            No coding questions yet.
+          </div>
+        ) : (
+          questions.map((q) =>
+            editingId === q.id ? null : (
+              <div
+                key={q.id}
+                className="hud-card rounded-xl p-4 transition hover:border-primary/50"
+              >
+                <p className="text-sm font-semibold text-on-surface leading-snug">
+                  {q.question}
+                </p>
+                <div className="mt-2">
+                  {q.repository_link ? (
+                    <a
+                      href={q.repository_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block max-w-full truncate font-mono text-label-mono text-primary underline underline-offset-2 hover:text-primary-hover"
+                    >
+                      {q.repository_link}
+                    </a>
+                  ) : (
+                    <span className="font-mono text-label-mono text-on-surface-variant">—</span>
+                  )}
+                </div>
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="font-mono text-label-mono text-on-surface-variant">
+                    {q.date_created}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => setViewingId(q.id)}
+                      className="rounded-lg p-1.5 text-on-surface-variant transition hover:bg-surface-container-highest hover:text-on-surface"
+                      title="View Notes"
+                    >
+                      <span className="material-symbols-outlined text-lg">visibility</span>
+                    </button>
+                    <button
+                      onClick={() => startEdit(q)}
+                      className="rounded-lg p-1.5 text-on-surface-variant transition hover:bg-surface-container-highest hover:text-on-surface"
+                      title="Edit"
+                    >
+                      <span className="material-symbols-outlined text-lg">edit</span>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(q.id)}
+                      className="rounded-lg p-1.5 text-[#F87171] transition hover:bg-[#3A1818] hover:text-[#FCA5A5]"
+                      title="Delete"
+                    >
+                      <span className="material-symbols-outlined text-lg">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )
+          )
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low sm:block">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-outline-variant bg-surface-container-lowest/50 text-left font-mono text-label-caps uppercase text-on-surface-variant">

@@ -103,7 +103,131 @@ export function DSATable({ concepts: initial }: { concepts: DSAConcept[] }) {
         <Button onClick={() => router.push("/dsa/new")}>Add Concept</Button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low">
+      {/* Mobile card list */}
+      <div className="space-y-3 sm:hidden">
+        {filtered.length === 0 ? (
+          <div className="rounded-xl border border-outline-variant bg-surface-container-low px-6 py-12 text-center text-on-surface-variant">
+            No DSA concepts found.
+          </div>
+        ) : (
+          filtered.map((concept) =>
+            editingId === concept.id ? (
+              <div key={concept.id} className="hud-card rounded-xl p-4">
+                <form onSubmit={handleSave} className="space-y-4">
+                  <div>
+                    <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Topic</label>
+                    <input
+                      type="text"
+                      value={form.topic}
+                      onChange={(e) => setForm((f) => ({ ...f, topic: e.target.value }))}
+                      className="field-dark mt-1 w-full px-3 py-2 text-sm"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Resource Used</label>
+                    <input
+                      type="text"
+                      value={form.resource_used}
+                      onChange={(e) => setForm((f) => ({ ...f, resource_used: e.target.value }))}
+                      className="field-dark mt-1 w-full px-3 py-2 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Mastery Level</label>
+                    <select
+                      value={form.mastery_level}
+                      onChange={(e) => setForm((f) => ({ ...f, mastery_level: e.target.value as MasteryLevel }))}
+                      className="field-dark mt-1 w-full px-3 py-2 text-sm"
+                    >
+                      <option value="not_started">Not Started</option>
+                      <option value="learning">Learning</option>
+                      <option value="comfortable">Comfortable</option>
+                      <option value="mastered">Mastered</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Date Studied</label>
+                    <input
+                      type="date"
+                      value={form.date_studied}
+                      onChange={(e) => setForm((f) => ({ ...f, date_studied: e.target.value }))}
+                      className="field-dark mt-1 w-full px-3 py-2 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Notes</label>
+                    <textarea
+                      value={form.notes}
+                      onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
+                      rows={3}
+                      className="field-dark mt-1 w-full px-3 py-2 text-sm"
+                    />
+                  </div>
+                  <div className="flex items-center gap-3 pt-2">
+                    <Button type="submit" disabled={saving}>
+                      {saving ? "Saving..." : "Save"}
+                    </Button>
+                    <Button type="button" variant="outline" onClick={cancelEdit}>
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            ) : (
+              <div
+                key={concept.id}
+                className="hud-card rounded-xl p-4 transition hover:border-primary/50"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-on-surface truncate">
+                      {concept.topic}
+                    </p>
+                    <p className="mt-0.5 font-mono text-label-mono text-on-surface-variant truncate">
+                      {concept.resource_used || "—"}
+                    </p>
+                  </div>
+                  <Badge variant={masteryVariants[concept.mastery_level]}>
+                    {masteryLabels[concept.mastery_level]}
+                  </Badge>
+                </div>
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="font-mono text-label-mono text-on-surface-variant">
+                    {concept.date_studied}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => setViewingId(concept.id)}
+                      className="rounded-lg p-1.5 text-on-surface-variant transition hover:bg-surface-container-highest hover:text-on-surface"
+                      title="View Notes"
+                    >
+                      <span className="material-symbols-outlined text-lg">visibility</span>
+                    </button>
+                    <button
+                      onClick={() => startEdit(concept)}
+                      className="rounded-lg p-1.5 text-on-surface-variant transition hover:bg-surface-container-highest hover:text-on-surface"
+                      title="Edit"
+                    >
+                      <span className="material-symbols-outlined text-lg">edit</span>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(concept.id)}
+                      className="rounded-lg p-1.5 text-[#F87171] transition hover:bg-[#3A1818] hover:text-[#FCA5A5]"
+                      title="Delete"
+                    >
+                      <span className="material-symbols-outlined text-lg">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )
+          )
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low sm:block">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-outline-variant bg-surface-container-lowest/50 text-left font-mono text-label-caps uppercase text-on-surface-variant">

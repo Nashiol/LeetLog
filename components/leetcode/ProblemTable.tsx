@@ -82,7 +82,45 @@ export function ProblemTable({
         </Button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low">
+      {/* Mobile card list */}
+      <div className="space-y-3 sm:hidden">
+        {filtered.length === 0 ? (
+          <div className="rounded-xl border border-outline-variant bg-surface-container-low px-6 py-12 text-center text-on-surface-variant">
+            No problems found.
+          </div>
+        ) : (
+          filtered.map((problem) => (
+            <button
+              key={problem.id}
+              onClick={() => router.push(`/leetcode/${problem.id}`)}
+              className="hud-card w-full rounded-xl p-4 text-left transition hover:border-primary/50"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-mono text-label-mono text-on-surface-variant">
+                  #{problem.problem_number}
+                </span>
+                <Badge variant={difficultyVariants[problem.difficulty]}>
+                  {problem.difficulty}
+                </Badge>
+              </div>
+              <p className="mt-1.5 text-sm font-semibold text-on-surface leading-snug">
+                {problem.question}
+              </p>
+              <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 font-mono text-label-mono text-on-surface-variant">
+                <span>{problem.programming_language}</span>
+                <span>{problem.date_solved}</span>
+                <Badge variant={statusVariants[problem.status]}>
+                  {statusLabels[problem.status]}
+                </Badge>
+                <span>Review: {problem.next_review_date}</span>
+              </div>
+            </button>
+          ))
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden overflow-hidden rounded-xl border border-outline-variant bg-surface-container-low sm:block">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-outline-variant bg-surface-container-lowest/50 font-mono text-label-caps uppercase text-on-surface-variant">

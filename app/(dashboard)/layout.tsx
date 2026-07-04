@@ -16,7 +16,7 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  const name = user.user_metadata?.name ?? user.email ?? "User";
+  const name = user.user_metadata?.full_name ?? user.user_metadata?.name ?? user.email ?? "User";
   const initial = name.charAt(0).toUpperCase();
 
   return (

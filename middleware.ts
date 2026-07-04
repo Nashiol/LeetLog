@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const publicPaths = ["/login", "/signup", "/"];
+  const publicPaths = ["/login", "/", "/auth/callback"];
   const isPublicPath = publicPaths.includes(request.nextUrl.pathname);
 
   if (!user && !isPublicPath) {

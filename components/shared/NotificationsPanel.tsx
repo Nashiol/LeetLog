@@ -75,7 +75,7 @@ export function NotificationsPanel() {
       </button>
 
       {open && (
-        <div className="fixed left-4 right-4 top-16 z-50 mt-2 rounded-xl border border-outline-variant bg-surface-container-low p-4 shadow-2xl md:absolute md:left-auto md:right-0 md:top-full md:w-[400px] md:max-w-[calc(100vw-2rem)]">
+        <div className="fixed left-4 right-4 top-16 z-50 mt-2 rounded-xl border border-outline-variant bg-surface-container-low p-4 shadow-2xl md:absolute md:left-auto md:right-0 md:top-full md:w-100 md:max-w-[calc(100vw-2rem)]">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="font-mono text-label-caps uppercase text-on-surface-variant">Due Today</h3>
             <span className="text-sm text-on-surface-variant">{count} problem{count !== 1 ? "s" : ""}</span>

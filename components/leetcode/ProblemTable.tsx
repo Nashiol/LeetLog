@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import type { LeetCodeProblem, Difficulty, ProblemStatus } from "@/types";
+import type { LeetCodeProblem, Difficulty, ProblemStatus, Tag } from "@/types";
+import { TagBadge } from "@/components/shared/TagBadge";
 
 const difficultyVariants: Record<Difficulty, "green" | "yellow" | "red"> = {
   easy: "green",
@@ -30,6 +31,14 @@ export function ProblemTable({
   problems: LeetCodeProblem[];
 }) {
   const router = useRouter();
+  const [tags, setTags] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags);
+  }, []);
+
+  const tagMap = Object.fromEntries(tags.map((t) => [t.id, t]));
+
   const [difficultyFilter, setDifficultyFilter] = useState<Difficulty | "all">(
     "all"
   );
@@ -113,6 +122,9 @@ export function ProblemTable({
                   {statusLabels[problem.status]}
                 </Badge>
                 <span>Review: {problem.next_review_date}</span>
+                {problem.tag_id && tagMap[problem.tag_id] && (
+                  <TagBadge tag={tagMap[problem.tag_id]} />
+                )}
               </div>
             </button>
           ))
@@ -131,12 +143,13 @@ export function ProblemTable({
               <th className="px-6 py-4">Date Solved</th>
               <th className="px-6 py-4">Status</th>
               <th className="px-6 py-4">Next Review</th>
+              <th className="px-6 py-4">Tag</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant font-mono text-label-mono">
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-6 py-12 text-center text-on-surface-variant">
+                <td colSpan={8} className="px-6 py-12 text-center text-on-surface-variant">
                   No problems found.
                 </td>
               </tr>
@@ -171,6 +184,13 @@ export function ProblemTable({
                   </td>
                   <td className="px-6 py-4 text-on-surface-variant">
                     {problem.next_review_date}
+                  </td>
+                  <td className="px-6 py-4">
+                    {problem.tag_id && tagMap[problem.tag_id] ? (
+                      <TagBadge tag={tagMap[problem.tag_id]} />
+                    ) : (
+                      <span className="text-on-surface-variant">—</span>
+                    )}
                   </td>
                 </tr>
               ))

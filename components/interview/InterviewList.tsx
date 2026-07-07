@@ -1,25 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
-import type { InterviewQuestion } from "@/types";
+import type { InterviewQuestion, Tag } from "@/types";
+import { TagBadge } from "@/components/shared/TagBadge";
+import { TagPicker } from "@/components/shared/TagPicker";
 
 export function InterviewList({
   questions: initial,
 }: {
   questions: InterviewQuestion[];
 }) {
+  const [tags, setTags] = useState<Tag[]>([]);
   const [questions, setQuestions] = useState(initial);
   const [showAdd, setShowAdd] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const [form, setForm] = useState({ question: "", answer: "", notes: "" });
+  const [form, setForm] = useState({ question: "", answer: "", notes: "", tag_id: null as string | null });
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
+  useEffect(() => {
+    fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags);
+  }, []);
+
+  const tagMap = Object.fromEntries(tags.map((t) => [t.id, t]));
+
   function resetForm() {
-    setForm({ question: "", answer: "", notes: "" });
+    setForm({ question: "", answer: "", notes: "", tag_id: null });
     setError("");
   }
 
@@ -100,7 +109,7 @@ export function InterviewList({
 
   function startEdit(q: InterviewQuestion) {
     setEditingId(q.id);
-    setForm({ question: q.question, answer: q.answer, notes: q.notes });
+    setForm({ question: q.question, answer: q.answer, notes: q.notes, tag_id: q.tag_id });
     setShowAdd(false);
     setError("");
   }
@@ -163,6 +172,16 @@ export function InterviewList({
             />
           </div>
 
+          <div>
+            <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Tag</label>
+            <TagPicker
+              value={form.tag_id}
+              onChange={(val) => setForm((f) => ({ ...f, tag_id: val }))}
+              tags={tags}
+              onTagsChange={() => fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags)}
+            />
+          </div>
+
           {error && <p className="text-sm text-[#F87171]">{error}</p>}
 
           <div className="flex items-center gap-3">
@@ -197,15 +216,20 @@ export function InterviewList({
                 key={q.id}
                 className="hud-card overflow-hidden rounded-xl"
               >
-                <button
-                  onClick={() =>
-                    setExpandedId(expandedId === q.id ? null : q.id)
-                  }
-                  className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-surface-container-highest"
-                >
-                  <span className="font-medium text-on-surface">
-                    {q.question}
-                  </span>
+                  <button
+                    onClick={() =>
+                      setExpandedId(expandedId === q.id ? null : q.id)
+                    }
+                    className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-surface-container-highest"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="font-medium text-on-surface truncate">
+                        {q.question}
+                      </span>
+                      {q.tag_id && tagMap[q.tag_id] && (
+                        <TagBadge tag={tagMap[q.tag_id]} />
+                      )}
+                    </div>
                   <svg
                     className={`h-4 w-4 text-on-surface-variant transition-transform ${
                       expandedId === q.id ? "rotate-180" : ""

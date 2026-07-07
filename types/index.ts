@@ -3,6 +3,14 @@ export type ProblemStatus = "in_progress" | "due_for_review" | "mastered";
 export type MasteryLevel = "not_started" | "learning" | "comfortable" | "mastered";
 export type ReviewRating = "hard" | "medium" | "easy" | "very_easy";
 
+export interface Tag {
+  id: string;
+  user_id: string;
+  name: string;
+  color: string;
+  created_at: string;
+}
+
 export interface LeetCodeProblem {
   id: string;
   user_id: string;
@@ -18,6 +26,7 @@ export interface LeetCodeProblem {
   repetition_count: number;
   ease_factor: number;
   status: ProblemStatus;
+  tag_id: string | null;
   created_at: string;
 }
 
@@ -29,6 +38,7 @@ export interface DSAConcept {
   notes: string;
   mastery_level: MasteryLevel;
   date_studied: string;
+  tag_id: string | null;
   created_at: string;
 }
 
@@ -38,6 +48,7 @@ export interface InterviewQuestion {
   question: string;
   answer: string;
   notes: string;
+  tag_id: string | null;
   created_at: string;
 }
 
@@ -48,6 +59,7 @@ export interface CodingQuestion {
   repository_link: string;
   notes: string;
   date_created: string;
+  tag_id: string | null;
   created_at: string;
 }
 
@@ -58,5 +70,8 @@ export interface SystemDesign {
   company: string;
   answer: string;
   notes: string;
+  tag_id: string | null;
   created_at: string;
 }
+
+export type ItemType = "leetcode" | "dsa" | "interview" | "coding" | "system_design";

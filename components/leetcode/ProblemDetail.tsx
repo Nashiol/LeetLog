@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { ReviewModal } from "@/components/leetcode/ReviewModal";
-import type { LeetCodeProblem } from "@/types";
+import type { LeetCodeProblem, Tag } from "@/types";
+import { TagBadge } from "@/components/shared/TagBadge";
+import { TagPicker } from "@/components/shared/TagPicker";
 
 const MonacoEditor = dynamic(
   () => import("@/components/ui/MonacoEditor"),
@@ -37,11 +39,19 @@ export function ProblemDetail({
   problem: LeetCodeProblem;
 }) {
   const router = useRouter();
+  const [tags, setTags] = useState<Tag[]>([]);
   const [editing, setEditing] = useState(false);
   const [showReview, setShowReview] = useState(false);
   const [formData, setFormData] = useState({ ...problem });
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags);
+  }, []);
+
+  const tagMap = Object.fromEntries(tags.map((t) => [t.id, t]));
+  const currentTag = problem.tag_id ? tagMap[problem.tag_id] ?? null : null;
 
   function update(field: string, value: string) {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -63,6 +73,7 @@ export function ProblemDetail({
         code_snippet: formData.code_snippet,
         notes: formData.notes,
         date_solved: formData.date_solved,
+        tag_id: formData.tag_id,
       }),
     });
 
@@ -172,6 +183,16 @@ export function ProblemDetail({
         </div>
 
         <div>
+          <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Tag</label>
+          <TagPicker
+            value={formData.tag_id}
+            onChange={(val) => setFormData((prev) => ({ ...prev, tag_id: val }))}
+            tags={tags}
+            onTagsChange={() => fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags)}
+          />
+        </div>
+
+        <div>
           <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Code</label>
           <div className="mt-1 overflow-hidden rounded-lg border border-outline-variant bg-[#050505]">
             <MonacoEditor
@@ -221,6 +242,7 @@ export function ProblemDetail({
             <Badge variant={statusVariants[problem.status]}>
               {statusLabels[problem.status]}
             </Badge>
+            {currentTag && <TagBadge tag={currentTag} />}
           </div>
           <h1 className="mt-3 text-headline-lg font-semibold text-on-surface">
             {problem.question}

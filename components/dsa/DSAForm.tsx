@@ -1,11 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
+import type { Tag } from "@/types";
+import { TagPicker } from "@/components/shared/TagPicker";
 
 export function DSAForm() {
   const router = useRouter();
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [tagId, setTagId] = useState<string | null>(null);
+
   const [formData, setFormData] = useState({
     topic: "",
     resource_used: "",
@@ -15,6 +20,10 @@ export function DSAForm() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags);
+  }, []);
 
   function update(field: string, value: string) {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -34,7 +43,7 @@ export function DSAForm() {
     const res = await fetch("/api/dsa", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({ ...formData, tag_id: tagId }),
     });
 
     setLoading(false);
@@ -102,6 +111,16 @@ export function DSAForm() {
             className="field-dark mt-1 px-3 py-2.5 text-sm"
           />
         </div>
+      </div>
+
+      <div>
+        <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Tag</label>
+        <TagPicker
+          value={tagId}
+          onChange={setTagId}
+          tags={tags}
+          onTagsChange={() => fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags)}
+        />
       </div>
 
       <div>

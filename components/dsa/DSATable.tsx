@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { DSANotesModal } from "@/components/dsa/DSANotesModal";
-import type { DSAConcept, MasteryLevel } from "@/types";
+import type { DSAConcept, MasteryLevel, Tag } from "@/types";
+import { TagBadge } from "@/components/shared/TagBadge";
+import { TagPicker } from "@/components/shared/TagPicker";
 
 const masteryVariants: Record<MasteryLevel, "gray" | "blue" | "yellow" | "green"> = {
   not_started: "gray",
@@ -23,12 +25,19 @@ const masteryLabels: Record<MasteryLevel, string> = {
 
 export function DSATable({ concepts: initial }: { concepts: DSAConcept[] }) {
   const router = useRouter();
+  const [tags, setTags] = useState<Tag[]>([]);
   const [concepts, setConcepts] = useState(initial);
   const [filter, setFilter] = useState<MasteryLevel | "all">("all");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [viewingId, setViewingId] = useState<string | null>(null);
-  const [form, setForm] = useState({ topic: "", resource_used: "", notes: "", mastery_level: "not_started" as MasteryLevel, date_studied: "" });
+  const [form, setForm] = useState({ topic: "", resource_used: "", notes: "", mastery_level: "not_started" as MasteryLevel, date_studied: "", tag_id: null as string | null });
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags);
+  }, []);
+
+  const tagMap = Object.fromEntries(tags.map((t) => [t.id, t]));
 
   const filtered = useMemo(() => {
     if (filter === "all") return concepts;
@@ -45,6 +54,7 @@ export function DSATable({ concepts: initial }: { concepts: DSAConcept[] }) {
       notes: c.notes,
       mastery_level: c.mastery_level,
       date_studied: c.date_studied,
+      tag_id: c.tag_id,
     });
   }
 
@@ -62,7 +72,7 @@ export function DSATable({ concepts: initial }: { concepts: DSAConcept[] }) {
     const res = await fetch(`/api/dsa/${editingId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, tag_id: form.tag_id }),
     });
 
     setSaving(false);
@@ -164,6 +174,15 @@ export function DSATable({ concepts: initial }: { concepts: DSAConcept[] }) {
                       className="field-dark mt-1 w-full px-3 py-2 text-sm"
                     />
                   </div>
+                  <div>
+                    <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Tag</label>
+                    <TagPicker
+                      value={form.tag_id}
+                      onChange={(val) => setForm((f) => ({ ...f, tag_id: val }))}
+                      tags={tags}
+                      onTagsChange={() => fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags)}
+                    />
+                  </div>
                   <div className="flex items-center gap-3 pt-2">
                     <Button type="submit" disabled={saving}>
                       {saving ? "Saving..." : "Save"}
@@ -196,6 +215,11 @@ export function DSATable({ concepts: initial }: { concepts: DSAConcept[] }) {
                   <span className="font-mono text-label-mono text-on-surface-variant">
                     {concept.date_studied}
                   </span>
+                  <div className="flex items-center gap-2">
+                    {concept.tag_id && tagMap[concept.tag_id] && (
+                      <TagBadge tag={tagMap[concept.tag_id]} />
+                    )}
+                  </div>
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => setViewingId(concept.id)}
@@ -235,13 +259,14 @@ export function DSATable({ concepts: initial }: { concepts: DSAConcept[] }) {
               <th className="px-6 py-4">Resource Used</th>
               <th className="px-6 py-4">Mastery Level</th>
               <th className="px-6 py-4">Date Studied</th>
+              <th className="px-6 py-4">Tag</th>
               <th className="px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant">
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-12 text-center text-on-surface-variant">
+                <td colSpan={6} className="px-6 py-12 text-center text-on-surface-variant">
                   No DSA concepts found.
                 </td>
               </tr>
@@ -249,7 +274,7 @@ export function DSATable({ concepts: initial }: { concepts: DSAConcept[] }) {
               filtered.map((concept) =>
                 editingId === concept.id ? (
                   <tr key={concept.id}>
-                    <td colSpan={5} className="px-6 py-4">
+                    <td colSpan={6} className="px-6 py-4">
                       <form onSubmit={handleSave} className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div>
@@ -305,6 +330,15 @@ export function DSATable({ concepts: initial }: { concepts: DSAConcept[] }) {
                             className="field-dark mt-1 w-full px-3 py-2 text-sm"
                           />
                         </div>
+                        <div>
+                          <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Tag</label>
+                          <TagPicker
+                            value={form.tag_id}
+                            onChange={(val) => setForm((f) => ({ ...f, tag_id: val }))}
+                            tags={tags}
+                            onTagsChange={() => fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags)}
+                          />
+                        </div>
                         <div className="flex items-center gap-3 pt-2">
                           <Button type="submit" disabled={saving}>
                             {saving ? "Saving..." : "Save"}
@@ -334,6 +368,13 @@ export function DSATable({ concepts: initial }: { concepts: DSAConcept[] }) {
                     </td>
                     <td className="px-6 py-4 font-mono text-label-mono text-on-surface-variant">
                       {concept.date_studied}
+                    </td>
+                    <td className="px-6 py-4">
+                      {concept.tag_id && tagMap[concept.tag_id] ? (
+                        <TagBadge tag={tagMap[concept.tag_id]} />
+                      ) : (
+                        <span className="text-on-surface-variant">—</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">

@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import type { CodingQuestion } from "@/types";
+import type { CodingQuestion, Tag } from "@/types";
+import { TagBadge } from "@/components/shared/TagBadge";
 
 export function CodingNotesModal({
   question,
@@ -15,7 +16,14 @@ export function CodingNotesModal({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const [tags, setTags] = useState<Tag[]>([]);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags);
+  }, []);
+
+  const tagMap = Object.fromEntries(tags.map((t) => [t.id, t]));
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -42,9 +50,14 @@ export function CodingNotesModal({
       >
         <div className="mb-6 flex items-start justify-between">
           <div className="flex-1 min-w-0">
-            <h2 className="text-headline-lg font-semibold text-on-surface">
-              {question.question}
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-headline-lg font-semibold text-on-surface truncate">
+                {question.question}
+              </h2>
+              {question.tag_id && tagMap[question.tag_id] && (
+                <TagBadge tag={tagMap[question.tag_id]} />
+              )}
+            </div>
             {question.repository_link && (
               <a
                 href={question.repository_link}

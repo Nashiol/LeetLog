@@ -1,8 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
-import type { LeetCodeProblem } from "@/types";
+import type { LeetCodeProblem, Tag } from "@/types";
+import { TagBadge } from "@/components/shared/TagBadge";
 
 const difficultyVariants = {
   easy: "green" as const,
@@ -11,6 +13,14 @@ const difficultyVariants = {
 };
 
 export function DueToday({ problems }: { problems: LeetCodeProblem[] }) {
+  const [tags, setTags] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags);
+  }, []);
+
+  const tagMap = Object.fromEntries(tags.map((t) => [t.id, t]));
+
   if (problems.length === 0) {
     return (
       <div className="hud-card rounded-xl p-8 text-center">
@@ -49,6 +59,9 @@ export function DueToday({ problems }: { problems: LeetCodeProblem[] }) {
                 <span className="font-mono text-label-mono text-on-surface-variant">
                   {problem.programming_language}
                 </span>
+                {problem.tag_id && tagMap[problem.tag_id] && (
+                  <TagBadge tag={tagMap[problem.tag_id]} />
+                )}
               </div>
             </div>
           </div>

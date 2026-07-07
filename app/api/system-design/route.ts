@@ -46,6 +46,7 @@ export async function POST(request: Request) {
       company: body.company ?? "",
       answer: body.answer ?? "",
       notes: body.notes ?? "",
+      tag_id: body.tag_id ?? null,
     })
     .select()
     .single();

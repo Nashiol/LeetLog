@@ -46,6 +46,7 @@ export async function POST(request: Request) {
       repository_link: body.repository_link ?? "",
       notes: body.notes ?? "",
       date_created: body.date_created,
+      tag_id: body.tag_id ?? null,
     })
     .select()
     .single();

@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/Button";
+import type { Tag } from "@/types";
+import { TagPicker } from "@/components/shared/TagPicker";
 
 const MonacoEditor = dynamic(
   () => import("@/components/ui/MonacoEditor"),
@@ -46,6 +48,9 @@ const languageToMonaco: Record<string, string> = {
 
 export function ProblemForm() {
   const router = useRouter();
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [tagId, setTagId] = useState<string | null>(null);
+
   const [formData, setFormData] = useState({
     problem_number: "",
     question: "",
@@ -58,6 +63,10 @@ export function ProblemForm() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags);
+  }, []);
 
   function update(field: string, value: string) {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -80,6 +89,7 @@ export function ProblemForm() {
       body: JSON.stringify({
         ...formData,
         problem_number: parseInt(formData.problem_number, 10),
+        tag_id: tagId,
       }),
     });
 
@@ -181,6 +191,16 @@ export function ProblemForm() {
             className="field-dark mt-1 px-3 py-2.5 font-mono text-label-mono"
           />
         </div>
+      </div>
+
+      <div>
+        <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Tag</label>
+        <TagPicker
+          value={tagId}
+          onChange={setTagId}
+          tags={tags}
+          onTagsChange={() => fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags)}
+        />
       </div>
 
       <div>

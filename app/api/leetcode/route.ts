@@ -53,6 +53,7 @@ export async function POST(request: Request) {
       code_snippet: body.code_snippet ?? "",
       notes: body.notes ?? "",
       date_solved: body.date_solved,
+      tag_id: body.tag_id ?? null,
       next_review_date: nextReviewDate.toISOString().split("T")[0],
     })
     .select()

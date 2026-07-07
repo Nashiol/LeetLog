@@ -3,7 +3,8 @@
 import { useRef, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import type { DSAConcept, MasteryLevel } from "@/types";
+import type { DSAConcept, MasteryLevel, Tag } from "@/types";
+import { TagBadge } from "@/components/shared/TagBadge";
 
 const masteryVariants: Record<MasteryLevel, "gray" | "blue" | "yellow" | "green"> = {
   not_started: "gray",
@@ -30,7 +31,14 @@ export function DSANotesModal({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const [tags, setTags] = useState<Tag[]>([]);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags);
+  }, []);
+
+  const tagMap = Object.fromEntries(tags.map((t) => [t.id, t]));
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -64,6 +72,9 @@ export function DSANotesModal({
               <Badge variant={masteryVariants[concept.mastery_level]}>
                 {masteryLabels[concept.mastery_level]}
               </Badge>
+              {concept.tag_id && tagMap[concept.tag_id] && (
+                <TagBadge tag={tagMap[concept.tag_id]} />
+              )}
             </div>
             {concept.resource_used && (
               <p className="mt-1 text-sm text-on-surface-variant">{concept.resource_used}</p>

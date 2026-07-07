@@ -1,15 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { CodingNotesModal } from "@/components/coding/CodingNotesModal";
-import type { CodingQuestion } from "@/types";
+import type { CodingQuestion, Tag } from "@/types";
+import { TagBadge } from "@/components/shared/TagBadge";
+import { TagPicker } from "@/components/shared/TagPicker";
 
 export function CodingList({
   questions: initial,
 }: {
   questions: CodingQuestion[];
 }) {
+  const [tags, setTags] = useState<Tag[]>([]);
   const [questions, setQuestions] = useState(initial);
   const [showAdd, setShowAdd] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -20,9 +23,16 @@ export function CodingList({
     repository_link: "",
     notes: "",
     date_created: new Date().toISOString().split("T")[0],
+    tag_id: null as string | null,
   });
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags);
+  }, []);
+
+  const tagMap = Object.fromEntries(tags.map((t) => [t.id, t]));
 
   function resetForm() {
     setForm({
@@ -30,6 +40,7 @@ export function CodingList({
       repository_link: "",
       notes: "",
       date_created: new Date().toISOString().split("T")[0],
+      tag_id: null,
     });
     setError("");
   }
@@ -118,6 +129,7 @@ export function CodingList({
       repository_link: q.repository_link,
       notes: q.notes,
       date_created: q.date_created,
+      tag_id: q.tag_id,
     });
     setShowAdd(false);
     setError("");
@@ -196,6 +208,16 @@ export function CodingList({
             />
           </div>
 
+          <div>
+            <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Tag</label>
+            <TagPicker
+              value={form.tag_id}
+              onChange={(val) => setForm((f) => ({ ...f, tag_id: val }))}
+              tags={tags}
+              onTagsChange={() => fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags)}
+            />
+          </div>
+
           {error && <p className="text-sm text-[#F87171]">{error}</p>}
 
           <div className="flex items-center gap-3 border-t border-outline-variant pt-4">
@@ -243,7 +265,12 @@ export function CodingList({
                     <span className="font-mono text-label-mono text-on-surface-variant">—</span>
                   )}
                 </div>
-                <div className="mt-3 flex items-center justify-between">
+                <div className="mt-2 flex items-center gap-2">
+                  {q.tag_id && tagMap[q.tag_id] && (
+                    <TagBadge tag={tagMap[q.tag_id]} />
+                  )}
+                </div>
+                <div className="mt-2 flex items-center justify-between">
                   <span className="font-mono text-label-mono text-on-surface-variant">
                     {q.date_created}
                   </span>
@@ -285,13 +312,14 @@ export function CodingList({
               <th className="px-6 py-4">Question</th>
               <th className="px-6 py-4">Repository</th>
               <th className="px-6 py-4">Date Created</th>
+              <th className="px-6 py-4">Tag</th>
               <th className="px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {questions.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-6 py-12 text-center text-on-surface-variant">
+                <td colSpan={5} className="px-6 py-12 text-center text-on-surface-variant">
                   No coding questions yet.
                 </td>
               </tr>
@@ -321,6 +349,13 @@ export function CodingList({
                     </td>
                     <td className="px-6 py-4 font-mono text-label-mono text-on-surface-variant">
                       {q.date_created}
+                    </td>
+                    <td className="px-6 py-4">
+                      {q.tag_id && tagMap[q.tag_id] ? (
+                        <TagBadge tag={tagMap[q.tag_id]} />
+                      ) : (
+                        <span className="text-on-surface-variant">—</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">

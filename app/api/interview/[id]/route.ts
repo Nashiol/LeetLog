@@ -24,6 +24,7 @@ export async function PUT(
       question: body.question,
       answer: body.answer,
       notes: body.notes,
+      tag_id: body.tag_id ?? null,
     })
     .eq("id", id)
     .eq("user_id", user.id)

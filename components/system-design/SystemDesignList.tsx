@@ -1,15 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import type { SystemDesign } from "@/types";
+import type { SystemDesign, Tag } from "@/types";
+import { TagBadge } from "@/components/shared/TagBadge";
+import { TagPicker } from "@/components/shared/TagPicker";
 
 export function SystemDesignList({
   entries: initial,
 }: {
   entries: SystemDesign[];
 }) {
+  const [tags, setTags] = useState<Tag[]>([]);
   const [entries, setEntries] = useState(initial);
   const [showAdd, setShowAdd] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -20,12 +23,19 @@ export function SystemDesignList({
     company: "",
     answer: "",
     notes: "",
+    tag_id: null as string | null,
   });
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
+  useEffect(() => {
+    fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags);
+  }, []);
+
+  const tagMap = Object.fromEntries(tags.map((t) => [t.id, t]));
+
   function resetForm() {
-    setForm({ question: "", company: "", answer: "", notes: "" });
+    setForm({ question: "", company: "", answer: "", notes: "", tag_id: null });
     setError("");
   }
 
@@ -111,6 +121,7 @@ export function SystemDesignList({
       company: e.company,
       answer: e.answer,
       notes: e.notes,
+      tag_id: e.tag_id,
     });
     setShowAdd(false);
     setError("");
@@ -193,6 +204,16 @@ export function SystemDesignList({
             />
           </div>
 
+          <div>
+            <label className="block font-mono text-label-caps uppercase text-on-surface-variant">Tag</label>
+            <TagPicker
+              value={form.tag_id}
+              onChange={(val) => setForm((f) => ({ ...f, tag_id: val }))}
+              tags={tags}
+              onTagsChange={() => fetch("/api/tags").then((r) => r.ok ? r.json() : []).then(setTags)}
+            />
+          </div>
+
           {error && <p className="text-sm text-[#F87171]">{error}</p>}
 
           <div className="flex items-center gap-3 border-t border-outline-variant pt-4">
@@ -233,12 +254,15 @@ export function SystemDesignList({
                   }
                   className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-surface-container-highest"
                 >
-                  <div className="flex items-center gap-3 min-w-0">
+                  <div className="flex items-center gap-2 min-w-0">
                     <span className="font-medium text-on-surface truncate">
                       {entry.question}
                     </span>
                     {entry.company && (
                       <Badge variant="blue">{entry.company}</Badge>
+                    )}
+                    {entry.tag_id && tagMap[entry.tag_id] && (
+                      <TagBadge tag={tagMap[entry.tag_id]} />
                     )}
                   </div>
                   <div className="flex items-center gap-3 shrink-0">

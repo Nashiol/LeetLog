@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { SidebarNav } from "@/components/shared/SidebarNav";
+import { TagSection } from "@/components/shared/TagSection";
 import { DashboardHeader } from "@/components/shared/DashboardHeader";
 
 export function AppShell({
@@ -55,6 +56,10 @@ export function AppShell({
         </div>
 
         <SidebarNav onClick={() => setSidebarOpen(false)} />
+
+        <div className="border-t border-outline-variant my-2" />
+
+        <TagSection onClick={() => setSidebarOpen(false)} />
 
         <div className="mt-auto border-t border-outline-variant p-3">
           <div className="mb-3 flex items-center gap-3 rounded-lg px-3 py-2">

@@ -26,6 +26,7 @@ export async function PUT(
       notes: body.notes ?? "",
       mastery_level: body.mastery_level ?? "not_started",
       date_studied: body.date_studied,
+      tag_id: body.tag_id ?? null,
     })
     .eq("id", id)
     .eq("user_id", user.id)

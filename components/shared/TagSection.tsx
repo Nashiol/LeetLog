@@ -9,6 +9,7 @@ import { CreateTagModal } from "./CreateTagModal";
 export function TagSection({ onClick }: { onClick?: () => void }) {
   const [tags, setTags] = useState<Tag[]>([]);
   const [showCreate, setShowCreate] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const pathname = usePathname();
 
   async function loadTags() {
@@ -24,20 +25,30 @@ export function TagSection({ onClick }: { onClick?: () => void }) {
 
   return (
     <div className="px-3 pb-2">
-      <div className="mb-1 flex items-center justify-between px-4">
-        <span className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">
+      <button
+        type="button"
+        onClick={() => setCollapsed((p) => !p)}
+        className="mb-1 flex w-full items-center justify-between px-4 text-left"
+      >
+        <span className="flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-on-surface-variant">
+          <span
+            className={`material-symbols-outlined text-sm transition-transform ${
+              collapsed ? "" : "rotate-180"
+            }`}
+          >
+            expand_more
+          </span>
           Tags
         </span>
-        <button
-          type="button"
-          onClick={() => setShowCreate(true)}
-          className="flex h-5 w-5 items-center justify-center rounded text-on-surface-variant transition hover:bg-surface-container-highest hover:text-on-surface"
+        <span
+          onClick={(e) => { e.stopPropagation(); setShowCreate(true); }}
+          className="flex h-5 w-5 cursor-pointer items-center justify-center rounded text-on-surface-variant transition hover:bg-surface-container-highest hover:text-on-surface"
           aria-label="Create tag"
         >
           <span className="material-symbols-outlined text-sm">add</span>
-        </button>
-      </div>
-      {tags.map((tag) => {
+        </span>
+      </button>
+      {!collapsed && tags.map((tag) => {
         const isActive = pathname === `/tags/${tag.id}`;
         return (
           <Link
@@ -58,7 +69,7 @@ export function TagSection({ onClick }: { onClick?: () => void }) {
           </Link>
         );
       })}
-      {tags.length === 0 && (
+      {!collapsed && tags.length === 0 && (
         <p className="px-4 py-2 text-xs text-on-surface-variant">
           No tags yet
         </p>

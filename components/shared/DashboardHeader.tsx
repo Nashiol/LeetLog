@@ -8,11 +8,9 @@ import { HelpPanel } from "./HelpPanel";
 
 export function DashboardHeader({
   name,
-  initial,
   onMenuClick,
 }: {
   name: string;
-  initial: string;
   onMenuClick?: () => void;
 }) {
   const [helpOpen, setHelpOpen] = useState(false);
@@ -53,9 +51,6 @@ export function DashboardHeader({
           >
             <span className="material-symbols-outlined">help_outline</span>
           </button>
-          <span className="ml-2 flex h-8 w-8 items-center justify-center rounded-full border border-outline-variant bg-surface-container-high font-mono text-sm text-primary">
-            {initial}
-          </span>
         </div>
       </header>
 

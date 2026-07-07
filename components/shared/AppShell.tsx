@@ -109,7 +109,6 @@ export function AppShell({
       <div className="flex min-h-screen flex-1 flex-col md:ml-sidebar-width">
         <DashboardHeader
           name={name}
-          initial={initial}
           onMenuClick={() => setSidebarOpen((p) => !p)}
         />
         <main className="flex-1 overflow-x-hidden bg-background p-container-padding">

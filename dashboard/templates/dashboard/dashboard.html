@@ -8,119 +8,127 @@
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
-    <div class="dashboard-header">
-        <h1 class="dashboard-title">Dashboard</h1>
-        <p class="dashboard-date">{{ today|date:"l, F j, Y" }}</p>
-    </div>
-
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon stat-icon-blue">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-                </svg>
-            </div>
-            <div class="stat-info">
-                <p class="stat-value">{{ total_problems }}</p>
-                <p class="stat-label">Problems Solved</p>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon stat-icon-orange">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-            </div>
-            <div class="stat-info">
-                <p class="stat-value">{{ due_today_count }}</p>
-                <p class="stat-label">Due Today</p>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon stat-icon-green">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-            </div>
-            <div class="stat-info">
-                <p class="stat-value">{{ mastered_count }}</p>
-                <p class="stat-label">Mastered</p>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon stat-icon-purple">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
-                </svg>
-            </div>
-            <div class="stat-info">
-                <p class="stat-value">{{ streak }}</p>
-                <p class="stat-label">Day Streak</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="content-grid">
-        <div class="panel">
-            <div class="panel-header">
-                <h2 class="panel-title">Due Today</h2>
-            </div>
-            <div class="panel-body">
-                {% if due_today_count > 0 %}
-                    <p>placeholder</p>
-                {% else %}
-                <div class="empty-state">
-                    <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <p class="empty-title">All caught up!</p>
-                    <p class="empty-subtitle">No problems due for review today.</p>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="panel">
-            <div class="panel-header">
-                <h2 class="panel-title">Difficulty Breakdown</h2>
-            </div>
-            <div class="panel-body">
-                {% if total_problems > 0 %}
-                    <p>placeholder</p>
-                {% else %}
-                <div class="empty-state">
-                    <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
-                    </svg>
-                    <p class="empty-title">No data yet</p>
-                    <p class="empty-subtitle">Log your first problem to see stats.</p>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <div class="panel">
-        <div class="panel-header">
-            <h2 class="panel-title">Recent Activity</h2>
-        </div>
-        <div class="panel-body">
-            {% if recent_activity %}
-                <p>placeholder</p>
+<div class="max-w-[1400px] mx-auto space-y-8">
+    <div>
+        <h2 class="font-display text-display text-on-surface">Dashboard</h2>
+        <p class="font-body-lg text-body-lg text-on-surface-variant mt-2">
+            {% if due_today_count > 0 %}
+                Welcome back. You have {{ due_today_count }} problem{{ due_today_count|pluralize }} due for review today.
             {% else %}
-            <div class="empty-state">
-                <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <p class="empty-title">No activity yet</p>
-                <p class="empty-subtitle">Start logging problems, DSA concepts, and more.</p>
-            </div>
+                Welcome back. You're all caught up!
             {% endif %}
+        </p>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-card-gap">
+        <div class="hud-card p-6 rounded-xl flex flex-col gap-2">
+            <span class="font-label-caps text-label-caps text-[#A1A1AA] uppercase tracking-wider">Total Solved</span>
+            <div class="flex items-end gap-3">
+                <span class="font-display text-display text-on-surface">{{ total_problems }}</span>
+                <span class="font-label-mono text-label-mono text-tertiary-container mb-2">problems</span>
+            </div>
+        </div>
+
+        <div class="hud-card p-6 rounded-xl flex flex-col gap-2">
+            <span class="font-label-caps text-label-caps text-[#A1A1AA] uppercase tracking-wider">Current Streak</span>
+            <div class="flex items-end gap-3">
+                <span class="font-display text-display text-yellow-accent">{{ streak }}</span>
+                <span class="font-label-mono text-label-mono text-on-surface-variant mb-2">days</span>
+            </div>
+        </div>
+
+        <div class="hud-card p-6 rounded-xl flex flex-col gap-2">
+            <span class="font-label-caps text-label-caps text-[#A1A1AA] uppercase tracking-wider">Mastered</span>
+            <div class="flex items-end gap-3">
+                <span class="font-display text-display text-on-surface">{{ mastered_count }}</span>
+                <span class="font-label-mono text-label-mono text-[#4ADE80] mb-2">
+                    {% if total_problems > 0 %}{{ mastered_count }}% of solved{% else %}0% of solved{% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div class="hud-card p-6 rounded-xl flex flex-col gap-2 border border-primary/30 relative overflow-hidden group">
+            <div class="absolute inset-0 bg-primary/5 group-hover:bg-primary/10 transition-colors"></div>
+            <span class="font-label-caps text-label-caps text-[#A1A1AA] uppercase tracking-wider relative z-10">Due Today</span>
+            <div class="flex items-end gap-3 relative z-10">
+                <span class="font-display text-display text-on-surface">{{ due_today_count }}</span>
+                <span class="font-label-mono text-label-mono text-error mb-2">Needs review</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-4">
+            <div class="flex items-center justify-between border-b border-[#2A2A2A] pb-2">
+                <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-yellow-accent">schedule</span>
+                    Due Today
+                </h3>
+                <a href="{% url 'leetcode:list' %}" class="font-label-mono text-label-mono text-on-surface-variant hover:text-primary transition-colors">
+                    View All
+                </a>
+            </div>
+            <div class="space-y-4">
+                {% if due_today_count > 0 %}
+                    {% for problem in due_today %}
+                    <div class="hud-card rounded-lg p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-primary/50 transition-colors group">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded bg-[#222222] flex items-center justify-center flex-shrink-0 border border-[#2A2A2A]">
+                                <span class="font-label-mono text-label-mono text-on-surface-variant">#{{ problem.problem_number }}</span>
+                            </div>
+                            <div>
+                                <h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">{{ problem.question }}</h4>
+                                <div class="flex items-center gap-3 mt-1">
+                                    <span class="font-label-caps text-label-caps
+                                        {% if problem.difficulty == 'easy' %}text-[#4ADE80]
+                                        {% elif problem.difficulty == 'medium' %}text-yellow-accent
+                                        {% else %}text-[#F87171]{% endif %}">
+                                        {{ problem.get_difficulty_display }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{% url 'leetcode:detail' problem.pk %}" class="btn-primary px-6 py-2 rounded font-headline-md text-sm font-bold whitespace-nowrap active:scale-95 transition-transform text-center">
+                            Review Now
+                        </a>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="hud-card rounded-xl p-12 text-center">
+                    <span class="material-symbols-outlined text-[48px] text-on-surface-variant/30 mb-4 block">check_circle</span>
+                    <p class="font-headline-md text-headline-md text-on-surface mb-1">All caught up!</p>
+                    <p class="font-body-md text-body-md text-on-surface-variant">No problems due for review today.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <div class="flex items-center justify-between border-b border-[#2A2A2A] pb-2">
+                <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-on-surface-variant">history</span>
+                    Recent Activity
+                </h3>
+            </div>
+            <div class="hud-card rounded-xl p-5">
+                {% if recent_activity %}
+                <div class="relative border-l-2 border-[#2A2A2A] ml-3 space-y-6">
+                    {% for activity in recent_activity %}
+                    <div class="relative pl-6">
+                        <span class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-[#1A1A1A] border-2 border-primary"></span>
+                        <p class="font-body-md text-body-md text-on-surface">{{ activity.description }}</p>
+                        <p class="font-label-mono text-label-mono text-on-surface-variant mt-1">{{ activity.time }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-8">
+                    <span class="material-symbols-outlined text-[40px] text-on-surface-variant/30 mb-3 block">history</span>
+                    <p class="font-body-md text-body-md text-on-surface-variant">No activity yet.</p>
+                    <p class="font-body-md text-body-md text-on-surface-variant/60 mt-1">Start logging problems to see your history.</p>
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>

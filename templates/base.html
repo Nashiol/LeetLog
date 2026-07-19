@@ -1,35 +1,144 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}LeetLog{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#b4b4bd",
+                        "surface-dim": "#17130a",
+                        "inverse-on-surface": "#353025",
+                        "on-secondary-fixed": "#1a1b22",
+                        "tertiary": "#adddff",
+                        "secondary-fixed": "#e2e1eb",
+                        "on-primary-fixed-variant": "#5a4300",
+                        "primary-container": "#eab308",
+                        "on-primary-fixed": "#251a00",
+                        "on-tertiary-fixed": "#001e2e",
+                        "outline-variant": "#4f4633",
+                        "surface-container-high": "#2f291f",
+                        "on-primary": "#3f2e00",
+                        "surface": "#17130a",
+                        "on-background": "#ece1d1",
+                        "background": "#17130a",
+                        "on-tertiary-container": "#005072",
+                        "tertiary-container": "#60c5ff",
+                        "surface-container-highest": "#3a3429",
+                        "inverse-surface": "#ece1d1",
+                        "surface-variant": "#3a3429",
+                        "tertiary-fixed-dim": "#83cfff",
+                        "secondary-fixed-dim": "#c6c6cf",
+                        "surface-bright": "#3e382d",
+                        "surface-container-lowest": "#120e05",
+                        "surface-container-low": "#201b11",
+                        "error-container": "#93000a",
+                        "outline": "#9b8f79",
+                        "on-primary-container": "#604700",
+                        "on-tertiary-fixed-variant": "#004c6c",
+                        "secondary-container": "#45464e",
+                        "on-surface-variant": "#d3c5ac",
+                        "primary-fixed": "#ffdf9a",
+                        "on-secondary-fixed-variant": "#45464e",
+                        "secondary": "#c6c6cf",
+                        "primary": "#ffd165",
+                        "on-secondary": "#2f3037",
+                        "error": "#ffb4ab",
+                        "on-error": "#690005",
+                        "inverse-primary": "#785a00",
+                        "surface-container": "#241f15",
+                        "tertiary-fixed": "#c7e7ff",
+                        "on-error-container": "#ffdad6",
+                        "on-surface": "#ece1d1",
+                        "on-tertiary": "#00344c",
+                        "surface-tint": "#f7be1d",
+                        "primary-fixed-dim": "#f7be1d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "card-gap": "16px",
+                        "sidebar-width": "260px",
+                        "container-padding": "24px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "display": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-mono": ["JetBrains Mono"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-mono": ["13px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            background-color: #0F0F0F;
+            color: #ece1d1;
+        }
+        .hud-card {
+            background-color: #1A1A1A;
+            border: 1px solid #2A2A2A;
+        }
+        .btn-primary {
+            background-color: #EAB308;
+            color: #0F0F0F;
+        }
+        .text-yellow-accent {
+            color: #EAB308;
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #3a3429; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4f4633; }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="antialiased min-h-screen overflow-hidden">
 
-    {% include "navbar.html" %}
+    {% include "sidebar.html" %}
 
-    {% if request.user.is_authenticated %}
-    <div class="flex">
-        {% include "sidebar.html" %}
-        <main class="flex-1 ml-64 mt-16 p-8">
+    <main class="flex-1 ml-0 md:ml-sidebar-width flex flex-col h-screen overflow-hidden">
+        {% include "navbar.html" %}
+
+        {% if request.user.is_authenticated %}
+        <div class="flex-1 overflow-y-auto p-container-padding">
             {% block content %}{% endblock %}
-        </main>
-    </div>
-    {% else %}
-    <main class="mt-16 flex items-center justify-center min-h-[calc(100vh-4rem)]">
-        {% block auth_content %}{% endblock %}
+        </div>
+        {% else %}
+        <div class="flex-1 flex items-center justify-center">
+            {% block auth_content %}{% endblock %}
+        </div>
+        {% endif %}
     </main>
-    {% endif %}
 
     {% block extra_js %}{% endblock %}
 </body>

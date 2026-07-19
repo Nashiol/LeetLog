@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Log In - LeetLog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block auth_content %}
+<div class="auth-card">
+    <div class="auth-header">
+        <h1 class="auth-title">Welcome back</h1>
+        <p class="auth-subtitle">Log in to your LeetLog account</p>
+    </div>
+
+    <form method="post" class="auth-form" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="form-errors">
+            {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+            <p class="field-error">{{ form.email.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+            {{ form.password }}
+            {% if form.password.errors %}
+            <p class="field-error">{{ form.password.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="auth-button">Log In</button>
+    </form>
+
+    <p class="auth-footer">
+        Don't have an account? <a href="{% url 'users:signup' %}" class="auth-link">Sign up</a>
+    </p>
+</div>
+{% endblock %}

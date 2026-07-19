@@ -28,7 +28,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'users',
+    'dashboard',
+    'leetcode',
+    'dsa',
+    'interview_questions',
+    'coding_questions',
+    'system_design',
 ]
+
+LOGIN_URL = "users:login"
+LOGIN_REDIRECT_URL = "dashboard:dashboard"
+LOGOUT_REDIRECT_URL = "users:login"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -116,3 +126,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = 'users.User'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

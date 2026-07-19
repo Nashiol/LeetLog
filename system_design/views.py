@@ -4,5 +4,5 @@ from django.shortcuts import render
 
 
 @login_required
-def leetcode_list_view(request: HttpRequest) -> HttpResponse:
-    return render(request, "leetcode/list.html")
+def system_design_list_view(request: HttpRequest) -> HttpResponse:
+    return render(request, "system_design/list.html")

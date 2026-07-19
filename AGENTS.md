@@ -301,8 +301,8 @@ Called from the `leetcode` app's review view — never inline the interval/ease-
 | Route | View | Purpose |
 |---|---|---|
 | `/` | Landing Page | App intro, sign up / login CTA |
-| `/accounts/signup/` | Sign Up | First name, Last name, Email, Password registration |
-| `/accounts/login/` | Login | Email + password login |
+| `/users/signup/` | Sign Up | First name, Last name, Email, Password registration |
+| `/users/login/` | Login | Email + password login |
 | `/dashboard/` | Dashboard | Due Today, Stats, Recent Activity, Streak |
 | `/leetcode/` | LeetCode Logs | Full table of all logged problems |
 | `/leetcode/new/` | Add Problem | Form to log a new LeetCode problem |
@@ -314,7 +314,7 @@ Called from the `leetcode` app's review view — never inline the interval/ease-
 | `/system-design/` | System Design | System design Q&A by company |
 
 ### Route protection rules
-- `/accounts/login/` and `/accounts/signup/` are **public** — redirect to `/dashboard/` if already authenticated (check `request.user.is_authenticated` at the top of the view).
+- `/users/login/` and `/users/signup/` are **public** — redirect to `/dashboard/` if already authenticated (check `request.user.is_authenticated` at the top of the view).
 - `/` (landing) is **public**.
 - All other routes are **protected** — decorate with `@login_required` (or use `LoginRequiredMixin` for CBVs); unauthenticated requests redirect to `/accounts/login/`.
 - `LOGIN_URL`, `LOGIN_REDIRECT_URL`, and `LOGOUT_REDIRECT_URL` are set in `settings.py` — don't hardcode redirect paths in views.
@@ -399,7 +399,7 @@ Build in this exact order. Do not skip phases or build out of sequence.
 ```python
 INSTALLED_APPS = [
     ...
-    "accounts",
+    "users",
     "dashboard",
     "leetcode",
     "dsa",
@@ -408,11 +408,11 @@ INSTALLED_APPS = [
     "system_design",
 ]
 
-AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "users.User"
 
-LOGIN_URL = "accounts:login"
+LOGIN_URL = "users:login"
 LOGIN_REDIRECT_URL = "dashboard:dashboard"
-LOGOUT_REDIRECT_URL = "accounts:login"
+LOGOUT_REDIRECT_URL = "users:login"
 
 DATABASES = {
     "default": {

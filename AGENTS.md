@@ -381,7 +381,7 @@ Build in this exact order. Do not skip phases or build out of sequence.
 | # | Phase | What to build |
 |---|---|---|
 | 1 | Project Setup | Django project + CSS folder + Monaco Editor (CDN) + SQLite |
-| 2 | Authentication | `accounts` app: custom `User` model, `UserManager`, signup, login, `@login_required` protection |
+| 2 | Authentication | `users` app: custom `User` model, `UserManager`, signup, login, `@login_required` protection |
 | 3 | LeetCode Tab | Full CRUD for `LeetCodeProblem` |
 | 4 | Spaced Repetition | SM-2 in `leetcode/sm2.py`, review flow, Due Today on dashboard |
 | 5 | DSA Tab | Full CRUD for `DSAConcept` |

@@ -42,10 +42,8 @@ class LeetCodeProblemForm(forms.ModelForm):
                 "class": "form-input",
                 "placeholder": "e.g. Python, JavaScript",
             }),
-            "notes": forms.Textarea(attrs={
-                "class": "form-input",
-                "rows": 4,
-                "placeholder": "Your approach, notes, or key insights...",
+            "notes": forms.HiddenInput(attrs={
+                "id": "notes-hidden",
             }),
             "date_solved": forms.DateInput(attrs={
                 "class": "form-input",

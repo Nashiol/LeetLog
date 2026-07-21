@@ -6,9 +6,11 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.utils.timesince import timesince
 
+from coding_questions.models import CodingQuestion
 from dsa.models import DSAConcept
 from interview_questions.models import InterviewQuestion
 from leetcode.models import LeetCodeProblem
+from system_design.models import SystemDesign
 
 
 @login_required
@@ -64,8 +66,24 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
         .filter(user=user)
         .values_list("created_at__date", flat=True)
     )
+    coding_dates = (
+        CodingQuestion.objects
+        .filter(user=user)
+        .values_list("created_at__date", flat=True)
+    )
+    system_design_dates = (
+        SystemDesign.objects
+        .filter(user=user)
+        .values_list("created_at__date", flat=True)
+    )
     active_dates = sorted(
-        set(list(leetcode_dates) + list(dsa_dates) + list(interview_dates)),
+        set(
+            list(leetcode_dates)
+            + list(dsa_dates)
+            + list(interview_dates)
+            + list(coding_dates)
+            + list(system_design_dates)
+        ),
         reverse=True,
     )
     streak = 0
@@ -80,6 +98,8 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
     recent_problems = LeetCodeProblem.objects.filter(user=user)[:5]
     recent_dsa = DSAConcept.objects.filter(user=user)[:5]
     recent_interview = InterviewQuestion.objects.filter(user=user)[:5]
+    recent_coding = CodingQuestion.objects.filter(user=user)[:5]
+    recent_system_design = SystemDesign.objects.filter(user=user)[:5]
     activity_items: list[dict[str, str]] = []
     for p in recent_problems:
         activity_items.append({
@@ -95,6 +115,16 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
         activity_items.append({
             "description": f"Added interview Q: {q.question}",
             "time": q.created_at,
+        })
+    for cq in recent_coding:
+        activity_items.append({
+            "description": f"Added coding Q: {cq.question[:60]}",
+            "time": cq.created_at,
+        })
+    for sd in recent_system_design:
+        activity_items.append({
+            "description": f"Added system design Q: {sd.question[:60]} ({sd.company})",
+            "time": sd.created_at,
         })
     activity_items.sort(key=lambda x: x["time"], reverse=True)
     recent_activity: list[dict[str, str]] = [

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Add System Design - LeetLog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/system_design.css' %}">
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="max-w-[800px] mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-1">Add System Design Question</h2>
+            <p class="text-on-surface-variant text-sm">Log a system design question and your approach.</p>
+        </div>
+        <a href="{% url 'system_design:list' %}" class="text-on-surface-variant hover:text-primary transition-colors font-label-mono text-label-mono">
+            &larr; Back to List
+        </a>
+    </div>
+
+    <div class="bg-surface-container-low border border-outline-variant rounded-xl p-8">
+        <form method="post" novalidate class="space-y-6" onsubmit="document.getElementById('notes-hidden').value = quill.root.innerHTML">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="bg-[rgba(255,180,171,0.08)] border border-[rgba(255,180,171,0.2)] rounded-lg p-4 text-sm text-error">
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="{{ form.question.id_for_label }}" class="form-label">Question</label>
+                {{ form.question }}
+                {% if form.question.errors %}
+                <p class="field-error">{{ form.question.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.company.id_for_label }}" class="form-label">Company</label>
+                {{ form.company }}
+                {% if form.company.errors %}
+                <p class="field-error">{{ form.company.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.answer.id_for_label }}" class="form-label">Answer</label>
+                {{ form.answer }}
+                {% if form.answer.errors %}
+                <p class="field-error">{{ form.answer.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Notes</label>
+                {{ form.notes }}
+                <div id="quill-editor"></div>
+            </div>
+
+            <div class="flex items-center gap-4 pt-2">
+                <button type="submit"
+                        class="bg-primary-container text-on-primary-container font-headline-md text-sm font-bold py-2.5 px-6 rounded-lg hover:brightness-110 transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">save</span>
+                    Save Question
+                </button>
+                <a href="{% url 'system_design:list' %}"
+                   class="border border-outline-variant text-on-surface-variant font-headline-md text-sm py-2.5 px-6 rounded-lg hover:bg-surface-container-highest transition-colors">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+<script>
+    const quill = new Quill('#quill-editor', {
+        theme: 'snow',
+        placeholder: 'Feedback, improvements, or additional notes...',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                ['blockquote', 'code-block'],
+                ['clean']
+            ]
+        }
+    });
+
+</script>
+{% endblock %}

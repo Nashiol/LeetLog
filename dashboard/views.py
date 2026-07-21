@@ -6,6 +6,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.utils.timesince import timesince
 
+from dsa.models import DSAConcept
 from leetcode.models import LeetCodeProblem
 
 
@@ -47,12 +48,19 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
         else 0
     )
 
-    active_dates = (
+    leetcode_dates = (
         LeetCodeProblem.objects
         .filter(user=user)
         .values_list("created_at__date", flat=True)
-        .distinct()
-        .order_by("-created_at__date")
+    )
+    dsa_dates = (
+        DSAConcept.objects
+        .filter(user=user)
+        .values_list("created_at__date", flat=True)
+    )
+    active_dates = sorted(
+        set(list(leetcode_dates) + list(dsa_dates)),
+        reverse=True,
     )
     streak = 0
     check_date = today
@@ -64,12 +72,23 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
             break
 
     recent_problems = LeetCodeProblem.objects.filter(user=user)[:5]
-    recent_activity: list[dict[str, str]] = []
+    recent_dsa = DSAConcept.objects.filter(user=user)[:5]
+    activity_items: list[dict[str, str]] = []
     for p in recent_problems:
-        recent_activity.append({
+        activity_items.append({
             "description": f"Logged #{p.problem_number} — {p.question}",
-            "time": timesince(p.created_at) + " ago",
+            "time": p.created_at,
         })
+    for c in recent_dsa:
+        activity_items.append({
+            "description": f"Studied {c.topic} ({c.get_mastery_level_display()})",
+            "time": c.created_at,
+        })
+    activity_items.sort(key=lambda x: x["time"], reverse=True)
+    recent_activity: list[dict[str, str]] = [
+        {"description": item["description"], "time": timesince(item["time"]) + " ago"}
+        for item in activity_items[:5]
+    ]
 
     context: dict[str, object] = {
         "due_today": due_today,

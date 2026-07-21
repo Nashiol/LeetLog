@@ -1,0 +1,67 @@
+#sidebar {
+    transition: width 0.2s ease;
+    overflow: hidden;
+}
+
+#sidebar .sidebar-label {
+    transition: opacity 0.15s ease;
+}
+
+#sidebar[data-expanded="false"] {
+    width: 72px;
+}
+
+#sidebar[data-expanded="false"] .sidebar-label {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#sidebar[data-expanded="false"] .px-6 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+#sidebar[data-expanded="false"] .px-4 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+#sidebar[data-expanded="false"] .px-4.py-3 {
+    padding-left: 0;
+    padding-right: 0;
+    justify-content: center;
+}
+
+#sidebar[data-expanded="false"] .px-4.mb-6 a {
+    padding-left: 0;
+    padding-right: 0;
+    justify-content: center;
+}
+
+#sidebar[data-expanded="false"] .px-4.mb-6 a .material-symbols-outlined {
+    margin: 0;
+}
+
+#sidebar[data-expanded="false"] .gap-3 {
+    gap: 0;
+}
+
+#sidebar[data-expanded="false"] .items-center > .sidebar-label {
+    display: none;
+}
+
+#main-content {
+    transition: margin-left 0.2s ease;
+}
+
+#main-content[data-sidebar-expanded="false"] {
+    margin-left: 72px;
+}
+
+@media (max-width: 767px) {
+    #main-content[data-sidebar-expanded="false"] {
+        margin-left: 0;
+    }
+}

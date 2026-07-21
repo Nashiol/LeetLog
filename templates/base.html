@@ -122,13 +122,14 @@
     </style>
     <link rel="stylesheet" href="{% static 'css/notes.css' %}">
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body class="antialiased min-h-screen overflow-hidden">
 
     {% include "sidebar.html" %}
 
-    <main class="flex-1 ml-0 md:ml-sidebar-width flex flex-col h-screen overflow-hidden">
+    <main id="main-content" data-sidebar-expanded="true" class="flex-1 ml-0 md:ml-sidebar-width flex flex-col h-screen overflow-hidden">
         {% include "navbar.html" %}
 
         {% if request.user.is_authenticated %}

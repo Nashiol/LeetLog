@@ -1,10 +1,10 @@
-<nav class="hidden md:flex flex-col h-screen w-sidebar-width fixed left-0 top-0 overflow-y-auto bg-surface-container-low border-r border-outline-variant z-40">
+<nav id="sidebar" data-expanded="true" class="hidden md:flex flex-col h-screen w-sidebar-width fixed left-0 top-0 overflow-y-auto bg-surface-container-low border-r border-outline-variant z-40">
     <div class="px-6 py-8">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm">
+            <div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm flex-shrink-0">
                 L
             </div>
-            <div>
+            <div class="sidebar-label">
                 <h1 class="font-display text-display text-primary text-2xl tracking-tight">LeetLog</h1>
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-1">Mastering Code</p>
             </div>
@@ -14,8 +14,8 @@
     <div class="px-4 mb-6">
         <a href="{% url 'leetcode:list' %}"
            class="w-full bg-primary-container text-on-primary-container hover:brightness-110 font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
-            Add Problem
+            <span class="material-symbols-outlined flex-shrink-0" style="font-variation-settings: 'FILL' 1;">add</span>
+            <span class="sidebar-label">Add Problem</span>
         </a>
     </div>
 
@@ -23,59 +23,91 @@
         <a href="{% url 'dashboard:dashboard' %}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200
                   {% if request.resolver_match.app_name == 'dashboard' %}border-l-[3px] border-primary text-on-surface font-bold bg-surface-container-high{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest{% endif %}">
-            <span class="material-symbols-outlined text-[20px]">dashboard</span>
-            <span class="font-headline-md text-headline-md text-sm">Dashboard</span>
+            <span class="material-symbols-outlined text-[20px] flex-shrink-0">dashboard</span>
+            <span class="sidebar-label font-headline-md text-headline-md text-sm">Dashboard</span>
         </a>
 
         <a href="{% url 'leetcode:list' %}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200
                   {% if request.resolver_match.app_name == 'leetcode' %}border-l-[3px] border-primary text-on-surface font-bold bg-surface-container-high{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest{% endif %}">
-            <span class="material-symbols-outlined text-[20px]">code</span>
-            <span class="font-headline-md text-headline-md text-sm">LeetCode</span>
+            <span class="material-symbols-outlined text-[20px] flex-shrink-0">code</span>
+            <span class="sidebar-label font-headline-md text-headline-md text-sm">LeetCode</span>
         </a>
 
         <a href="{% url 'dsa:list' %}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200
                   {% if request.resolver_match.app_name == 'dsa' %}border-l-[3px] border-primary text-on-surface font-bold bg-surface-container-high{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest{% endif %}">
-            <span class="material-symbols-outlined text-[20px]">account_tree</span>
-            <span class="font-headline-md text-headline-md text-sm">DSA</span>
+            <span class="material-symbols-outlined text-[20px] flex-shrink-0">account_tree</span>
+            <span class="sidebar-label font-headline-md text-headline-md text-sm">DSA</span>
         </a>
 
         <a href="{% url 'interview_questions:list' %}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200
                   {% if request.resolver_match.app_name == 'interview_questions' %}border-l-[3px] border-primary text-on-surface font-bold bg-surface-container-high{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest{% endif %}">
-            <span class="material-symbols-outlined text-[20px]">question_answer</span>
-            <span class="font-headline-md text-headline-md text-sm">Interview Questions</span>
+            <span class="material-symbols-outlined text-[20px] flex-shrink-0">question_answer</span>
+            <span class="sidebar-label font-headline-md text-headline-md text-sm">Interview Questions</span>
         </a>
 
         <a href="{% url 'coding_questions:list' %}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200
                   {% if request.resolver_match.app_name == 'coding_questions' %}border-l-[3px] border-primary text-on-surface font-bold bg-surface-container-high{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest{% endif %}">
-            <span class="material-symbols-outlined text-[20px]">terminal</span>
-            <span class="font-headline-md text-headline-md text-sm">Coding Questions</span>
+            <span class="material-symbols-outlined text-[20px] flex-shrink-0">terminal</span>
+            <span class="sidebar-label font-headline-md text-headline-md text-sm">Coding Questions</span>
         </a>
 
         <a href="{% url 'system_design:list' %}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200
                   {% if request.resolver_match.app_name == 'system_design' %}border-l-[3px] border-primary text-on-surface font-bold bg-surface-container-high{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest{% endif %}">
-            <span class="material-symbols-outlined text-[20px]">schema</span>
-            <span class="font-headline-md text-headline-md text-sm">System Design</span>
+            <span class="material-symbols-outlined text-[20px] flex-shrink-0">schema</span>
+            <span class="sidebar-label font-headline-md text-headline-md text-sm">System Design</span>
         </a>
     </div>
 
     <div class="mt-auto flex flex-col gap-1 p-2 border-t border-outline-variant">
+        <button onclick="toggleSidebar()" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200 rounded-lg w-full">
+            <span id="sidebar-toggle-icon" class="material-symbols-outlined text-[20px] flex-shrink-0">chevron_left</span>
+            <span class="sidebar-label font-headline-md text-headline-md text-sm">Collapse</span>
+        </button>
         <a href="{% url 'dashboard:settings' %}"
            class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200 rounded-lg">
-            <span class="material-symbols-outlined text-[20px]">settings</span>
-            <span class="font-headline-md text-headline-md text-sm">Settings</span>
+            <span class="material-symbols-outlined text-[20px] flex-shrink-0">settings</span>
+            <span class="sidebar-label font-headline-md text-headline-md text-sm">Settings</span>
         </a>
         <form method="post" action="{% url 'users:logout' %}">
             {% csrf_token %}
             <button type="submit"
                     class="w-full flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors duration-200 rounded-lg">
-                <span class="material-symbols-outlined text-[20px]">logout</span>
-                <span class="font-headline-md text-headline-md text-sm">Logout</span>
+                <span class="material-symbols-outlined text-[20px] flex-shrink-0">logout</span>
+                <span class="sidebar-label font-headline-md text-headline-md text-sm">Logout</span>
             </button>
         </form>
     </div>
 </nav>
+
+<script>
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const main = document.getElementById('main-content');
+    const icon = document.getElementById('sidebar-toggle-icon');
+    const expanded = sidebar.getAttribute('data-expanded') === 'true';
+    const newState = !expanded;
+
+    sidebar.setAttribute('data-expanded', String(newState));
+    main.setAttribute('data-sidebar-expanded', String(newState));
+    icon.textContent = newState ? 'chevron_left' : 'chevron_right';
+    localStorage.setItem('sidebar-expanded', String(newState));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const saved = localStorage.getItem('sidebar-expanded');
+    if (saved !== null) {
+        const expanded = saved === 'true';
+        const sidebar = document.getElementById('sidebar');
+        const main = document.getElementById('main-content');
+        const icon = document.getElementById('sidebar-toggle-icon');
+        sidebar.setAttribute('data-expanded', String(expanded));
+        main.setAttribute('data-sidebar-expanded', String(expanded));
+        icon.textContent = expanded ? 'chevron_left' : 'chevron_right';
+    }
+});
+</script>

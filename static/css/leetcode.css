@@ -16,10 +16,11 @@
     padding: 10px 14px;
     font-size: 0.875rem;
     font-family: 'Inter', sans-serif;
-    border: 1px solid #2A2A2A;
+    border: 1px solid #2A2A2A !important;
     border-radius: 8px;
-    background: #201b11;
-    color: #ece1d1;
+    background: #201b11 !important;
+    color: #ece1d1 !important;
+    color-scheme: dark;
     outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
     box-sizing: border-box;

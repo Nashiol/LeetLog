@@ -22,10 +22,8 @@ class DSAConceptForm(forms.ModelForm):
                 "class": "form-input",
                 "placeholder": "e.g. NeetCode, YouTube, Cracking the Coding Interview",
             }),
-            "notes": forms.Textarea(attrs={
-                "class": "form-input",
-                "rows": 4,
-                "placeholder": "Detailed study notes, key insights, patterns...",
+            "notes": forms.HiddenInput(attrs={
+                "id": "notes-hidden",
             }),
             "mastery_level": forms.Select(attrs={
                 "class": "form-input",

@@ -1,0 +1,150 @@
+/* Quill editor dark theme */
+#quill-editor {
+    border-radius: 8px;
+    min-height: 200px;
+}
+
+#quill-editor .ql-toolbar {
+    border: 1px solid #2A2A2A;
+    border-radius: 8px 8px 0 0;
+    background: #241f15;
+}
+
+#quill-editor .ql-toolbar .ql-stroke {
+    stroke: #d3c5ac;
+}
+
+#quill-editor .ql-toolbar .ql-fill {
+    fill: #d3c5ac;
+}
+
+#quill-editor .ql-toolbar button:hover .ql-stroke,
+#quill-editor .ql-toolbar button.ql-active .ql-stroke {
+    stroke: #EAB308;
+}
+
+#quill-editor .ql-toolbar button:hover .ql-fill,
+#quill-editor .ql-toolbar button.ql-active .ql-fill {
+    fill: #EAB308;
+}
+
+#quill-editor .ql-toolbar .ql-picker-label {
+    color: #d3c5ac;
+}
+
+#quill-editor .ql-toolbar .ql-picker-options {
+    background: #241f15;
+    border: 1px solid #2A2A2A;
+}
+
+#quill-editor .ql-toolbar .ql-picker-item:hover {
+    color: #EAB308;
+}
+
+#quill-editor .ql-container {
+    border: 1px solid #2A2A2A;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    background: #201b11;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+}
+
+#quill-editor .ql-editor {
+    color: #ece1d1;
+    min-height: 160px;
+}
+
+#quill-editor .ql-editor.ql-blank::before {
+    color: #9b8f79;
+    font-style: normal;
+}
+
+#quill-editor .ql-editor:focus {
+    outline: none;
+}
+
+/* Notes content in detail views */
+.notes-content h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.notes-content h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.notes-content h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.notes-content p {
+    margin: 0 0 0.75rem 0;
+}
+
+.notes-content ul,
+.notes-content ol {
+    margin: 0 0 0.75rem 0;
+    padding-left: 1.5rem;
+}
+
+.notes-content ul {
+    list-style-type: disc;
+}
+
+.notes-content ol {
+    list-style-type: decimal;
+}
+
+.notes-content li {
+    margin-bottom: 0.25rem;
+}
+
+.notes-content blockquote {
+    border-left: 3px solid #EAB308;
+    padding-left: 1rem;
+    margin: 0 0 0.75rem 0;
+    color: #d3c5ac;
+    font-style: italic;
+}
+
+.notes-content pre {
+    background: #241f15;
+    border: 1px solid #2A2A2A;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8125rem;
+    overflow-x: auto;
+    margin: 0 0 0.75rem 0;
+}
+
+.notes-content code {
+    background: #241f15;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8125rem;
+}
+
+.notes-content strong {
+    font-weight: 700;
+    color: #ece1d1;
+}
+
+.notes-content em {
+    font-style: italic;
+}
+
+.notes-content u {
+    text-decoration: underline;
+}
+
+.notes-content s {
+    text-decoration: line-through;
+}

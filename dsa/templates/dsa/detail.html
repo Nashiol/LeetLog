@@ -50,7 +50,7 @@
                 {% if concept.notes %}
                 <div class="mt-6 border-t border-[#2A2A2A] pt-6 relative z-10">
                     <h3 class="font-label-caps text-label-caps text-[#A1A1AA] mb-3">NOTES</h3>
-                    <div class="font-body-md text-body-md text-on-surface-variant whitespace-pre-wrap">{{ concept.notes }}</div>
+                    <div class="notes-content font-body-md text-body-md text-on-surface-variant">{{ concept.notes|safe }}</div>
                 </div>
                 {% endif %}
             </div>

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ question.question }} - LeetLog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/interview.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="max-w-[1200px] mx-auto">
+    <div class="mb-4">
+        <a href="{% url 'interview_questions:list' %}" class="text-on-surface-variant hover:text-primary transition-colors font-label-mono text-label-mono inline-flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+            Back to Interview Questions
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-card-gap">
+        <div class="xl:col-span-8 flex flex-col gap-6">
+            <div class="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-6 relative overflow-hidden group">
+                <div class="absolute -right-20 -top-20 w-40 h-40 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors duration-500"></div>
+
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="material-symbols-outlined text-yellow-accent text-[20px]">question_answer</span>
+                            <h1 class="font-headline-lg text-headline-lg text-on-surface">{{ question.question }}</h1>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <a href="{% url 'interview_questions:edit' question.pk %}"
+                           class="border border-outline-variant text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest rounded-lg p-2 transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">edit</span>
+                        </a>
+                        <form method="post" action="{% url 'interview_questions:delete' question.pk %}" class="inline"
+                              onsubmit="return confirm('Delete this question?')">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="border border-outline-variant text-on-surface-variant hover:text-error hover:bg-[rgba(255,180,171,0.1)] rounded-lg p-2 transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="mt-4 relative z-10">
+                    <h3 class="font-label-caps text-label-caps text-[#A1A1AA] mb-3">ANSWER</h3>
+                    <div class="font-body-md text-body-md text-on-surface-variant whitespace-pre-wrap">{{ question.answer }}</div>
+                </div>
+
+                {% if question.notes %}
+                <div class="mt-6 border-t border-[#2A2A2A] pt-6 relative z-10">
+                    <h3 class="font-label-caps text-label-caps text-[#A1A1AA] mb-3">NOTES</h3>
+                    <div class="notes-content font-body-md text-body-md text-on-surface-variant">{{ question.notes|safe }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="xl:col-span-4">
+            <div class="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg overflow-hidden">
+                <div class="flex items-center justify-between px-4 py-3 border-b border-[#2A2A2A] bg-[#222222]">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#FBBF24] text-[18px]">info</span>
+                        <span class="font-label-mono text-label-mono text-on-surface">Question Info</span>
+                    </div>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="font-label-mono text-label-mono text-on-surface-variant">Created</span>
+                        <span class="font-label-mono text-label-mono text-on-surface">{{ question.created_at|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

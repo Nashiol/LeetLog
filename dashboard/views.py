@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.utils.timesince import timesince
 
 from dsa.models import DSAConcept
+from interview_questions.models import InterviewQuestion
 from leetcode.models import LeetCodeProblem
 
 
@@ -58,8 +59,13 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
         .filter(user=user)
         .values_list("created_at__date", flat=True)
     )
+    interview_dates = (
+        InterviewQuestion.objects
+        .filter(user=user)
+        .values_list("created_at__date", flat=True)
+    )
     active_dates = sorted(
-        set(list(leetcode_dates) + list(dsa_dates)),
+        set(list(leetcode_dates) + list(dsa_dates) + list(interview_dates)),
         reverse=True,
     )
     streak = 0
@@ -73,6 +79,7 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
 
     recent_problems = LeetCodeProblem.objects.filter(user=user)[:5]
     recent_dsa = DSAConcept.objects.filter(user=user)[:5]
+    recent_interview = InterviewQuestion.objects.filter(user=user)[:5]
     activity_items: list[dict[str, str]] = []
     for p in recent_problems:
         activity_items.append({
@@ -83,6 +90,11 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
         activity_items.append({
             "description": f"Studied {c.topic} ({c.get_mastery_level_display()})",
             "time": c.created_at,
+        })
+    for q in recent_interview:
+        activity_items.append({
+            "description": f"Added interview Q: {q.question}",
+            "time": q.created_at,
         })
     activity_items.sort(key=lambda x: x["time"], reverse=True)
     recent_activity: list[dict[str, str]] = [

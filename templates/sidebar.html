@@ -1,9 +1,9 @@
+{% load static %}
+
 <nav id="sidebar" data-expanded="true" class="hidden md:flex flex-col h-screen w-sidebar-width fixed left-0 top-0 overflow-y-auto bg-surface-container-low border-r border-outline-variant z-40">
     <div class="px-6 py-8">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm flex-shrink-0">
-                L
-            </div>
+            <img src="{% static 'images/logo.jpg' %}" alt="LeetLog" class="w-10 h-10 rounded-lg object-cover flex-shrink-0">
             <div class="sidebar-label">
                 <h1 class="font-display text-display text-primary text-2xl tracking-tight">LeetLog</h1>
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-1">Mastering Code</p>

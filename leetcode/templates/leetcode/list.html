@@ -1,6 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}LeetCode - LeetLog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/leetcode.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="max-w-[1200px] mx-auto space-y-6">
@@ -9,11 +14,104 @@
             <h2 class="font-headline-lg text-headline-lg text-on-surface mb-1">LeetCode Problem Set</h2>
             <p class="text-on-surface-variant text-sm">Track, review, and master algorithm challenges.</p>
         </div>
+        <div class="flex items-center gap-3">
+            <form method="get" class="relative">
+                <select name="difficulty" onchange="this.form.submit()"
+                        class="appearance-none bg-surface-container-low border border-outline-variant text-on-surface font-label-mono text-label-mono rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-primary cursor-pointer hover:bg-surface-container-highest transition-colors">
+                    <option value="">All Difficulties</option>
+                    <option value="easy" {% if current_difficulty == 'easy' %}selected{% endif %}>Easy</option>
+                    <option value="medium" {% if current_difficulty == 'medium' %}selected{% endif %}>Medium</option>
+                    <option value="hard" {% if current_difficulty == 'hard' %}selected{% endif %}>Hard</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-lg">expand_more</span>
+            </form>
+            <a href="{% url 'leetcode:create' %}"
+               class="bg-primary-container text-on-primary-container font-headline-md text-sm font-bold py-2.5 px-5 rounded-lg hover:brightness-110 transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(234,179,8,0.15)] hover:shadow-[0_0_20px_rgba(234,179,8,0.25)]">
+                <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+                Log New
+            </a>
+        </div>
     </div>
+
+    {% if problems %}
+    <div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-outline-variant bg-surface-container-lowest/50">
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant w-16">#</th>
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant">Title</th>
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant w-32">Difficulty</th>
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant w-32">Language</th>
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant w-40">Date Solved</th>
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant w-48">Status</th>
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant w-40">Next Review</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant font-label-mono text-label-mono text-on-surface">
+                {% for problem in problems %}
+                <tr class="hover:bg-surface-container-highest transition-colors group cursor-pointer"
+                    onclick="window.location='{% url 'leetcode:detail' problem.pk %}'">
+                    <td class="py-4 px-6 text-on-surface-variant">{{ problem.problem_number }}</td>
+                    <td class="py-4 px-6">
+                        <span class="font-headline-md text-sm font-medium group-hover:text-primary transition-colors">
+                            {{ problem.question }}
+                        </span>
+                    </td>
+                    <td class="py-4 px-6">
+                        <span class="inline-flex items-center px-2 py-1 rounded text-xs font-bold difficulty-badge difficulty-{{ problem.difficulty }}">
+                            {{ problem.get_difficulty_display }}
+                        </span>
+                    </td>
+                    <td class="py-4 px-6">{{ problem.programming_language }}</td>
+                    <td class="py-4 px-6 text-on-surface-variant">{{ problem.date_solved|date:"M d, Y" }}</td>
+                    <td class="py-4 px-6">
+                        <div class="flex items-center gap-1.5
+                            {% if problem.status == 'mastered' %}text-primary
+                            {% elif problem.status == 'due_for_review' %}text-on-surface-variant
+                            {% else %}text-tertiary-container{% endif %}">
+                            <span class="material-symbols-outlined text-[16px]"
+                                  {% if problem.status == 'mastered' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>
+                                {% if problem.status == 'mastered' %}verified
+                                {% elif problem.status == 'due_for_review' %}schedule
+                                {% else %}sync{% endif %}
+                            </span>
+                            <span>{{ problem.get_status_display }}</span>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6
+                        {% if problem.status == 'due_for_review' %}text-primary-container
+                        {% else %}text-on-surface-variant{% endif %}">
+                        {% if problem.status == 'due_for_review' %}Today
+                        {% elif problem.status == 'mastered' %}{{ problem.next_review_date|date:"M d, Y" }}
+                        {% else %}{{ problem.next_review_date|date:"M d, Y" }}{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="border-t border-outline-variant bg-surface-container-lowest/30 px-6 py-3 flex items-center justify-between">
+            <span class="font-label-mono text-label-mono text-on-surface-variant">
+                Showing {{ problems|length }} problem{{ problems|length|pluralize }}
+            </span>
+        </div>
+    </div>
+    {% else %}
     <div class="hud-card rounded-xl p-12 text-center">
         <span class="material-symbols-outlined text-[48px] text-on-surface-variant/30 mb-4 block">code</span>
-        <p class="font-headline-md text-headline-md text-on-surface mb-1">Coming soon</p>
-        <p class="font-body-md text-body-md text-on-surface-variant">Full CRUD for LeetCode problems will be available here.</p>
+        <p class="font-headline-md text-headline-md text-on-surface mb-1">
+            {% if query or current_difficulty %}No problems found{% else %}No problems yet{% endif %}
+        </p>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+            {% if query or current_difficulty %}Try adjusting your filters.{% else %}Log your first LeetCode problem to get started.{% endif %}
+        </p>
+        {% if not query and not current_difficulty %}
+        <a href="{% url 'leetcode:create' %}"
+           class="inline-flex items-center gap-2 bg-primary-container text-on-primary-container font-headline-md text-sm font-bold py-2.5 px-5 rounded-lg hover:brightness-110 transition-all">
+            <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+            Log First Problem
+        </a>
+        {% endif %}
     </div>
+    {% endif %}
 </div>
 {% endblock %}

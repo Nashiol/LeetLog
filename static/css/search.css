@@ -1,0 +1,7 @@
+.search-result-card {
+    transition: border-color 0.2s, transform 0.1s;
+}
+
+.search-result-card:hover {
+    transform: translateY(-1px);
+}

@@ -4,11 +4,15 @@
             LeetLog
         </a>
         {% if request.user.is_authenticated %}
-        <div class="relative hidden sm:block">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-            <input class="pl-10 pr-4 py-2 hud-card rounded-lg font-label-mono text-label-mono text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 w-64 transition-all"
-                   placeholder="Search problems, notes..." type="text"/>
-        </div>
+        <form method="get" action="{% url 'dashboard:search' %}" class="hidden sm:block">
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+                <input name="q"
+                       value="{{ request.GET.q|default:'' }}"
+                       class="pl-10 pr-4 py-2 hud-card rounded-lg font-label-mono text-label-mono text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 w-64 transition-all"
+                       placeholder="Search problems, notes..." type="text"/>
+            </div>
+        </form>
         {% endif %}
     </div>
     <div class="flex items-center gap-2">

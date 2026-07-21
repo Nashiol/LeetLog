@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Settings - LeetLog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/settings.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="max-w-[800px] mx-auto space-y-8">
+    <div>
+        <h2 class="font-display text-display text-on-surface">Settings</h2>
+        <p class="font-body-lg text-body-lg text-on-surface-variant mt-2">
+            Manage your account settings and preferences.
+        </p>
+    </div>
+
+    {% if messages %}
+    <div class="space-y-3">
+        {% for message in messages %}
+        <div class="hud-card rounded-lg p-4 flex items-center gap-3
+            {% if message.tags == 'success' %}border-[#4ADE80]/30{% elif message.tags == 'error' %}border-[#F87171]/30{% endif %}">
+            <span class="material-symbols-outlined
+                {% if message.tags == 'success' %}text-[#4ADE80]{% elif message.tags == 'error' %}text-[#F87171]{% endif %}">
+                {% if message.tags == 'success' %}check_circle{% elif message.tags == 'error' %}error{% else %}info{% endif %}
+            </span>
+            <p class="font-body-md text-body-md text-on-surface">{{ message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="hud-card rounded-xl p-8 space-y-6">
+        <div class="flex items-center gap-3 border-b border-[#2A2A2A] pb-4">
+            <span class="material-symbols-outlined text-yellow-accent">person</span>
+            <h3 class="font-headline-lg text-headline-lg text-on-surface">Profile</h3>
+        </div>
+        <form method="post" action="{% url 'dashboard:settings' %}">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="profile">
+            <div class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider block mb-2">First Name</label>
+                        {{ profile_form.first_name }}
+                        {% if profile_form.first_name.errors %}
+                        <p class="font-body-md text-body-md text-[#F87171] mt-1">{{ profile_form.first_name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider block mb-2">Last Name</label>
+                        {{ profile_form.last_name }}
+                        {% if profile_form.last_name.errors %}
+                        <p class="font-body-md text-body-md text-[#F87171] mt-1">{{ profile_form.last_name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div>
+                    <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider block mb-2">Email</label>
+                    {{ profile_form.email }}
+                    {% if profile_form.email.errors %}
+                    <p class="font-body-md text-body-md text-[#F87171] mt-1">{{ profile_form.email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button type="submit" class="btn-primary px-6 py-2 rounded font-headline-md text-sm font-bold active:scale-95 transition-transform">
+                    Save Profile
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="hud-card rounded-xl p-8 space-y-6">
+        <div class="flex items-center gap-3 border-b border-[#2A2A2A] pb-4">
+            <span class="material-symbols-outlined text-yellow-accent">lock</span>
+            <h3 class="font-headline-lg text-headline-lg text-on-surface">Change Password</h3>
+        </div>
+        <form method="post" action="{% url 'dashboard:settings' %}">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="password">
+            <div class="space-y-4">
+                <div>
+                    <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider block mb-2">Current Password</label>
+                    {{ password_form.current_password }}
+                    {% if password_form.current_password.errors %}
+                    <p class="font-body-md text-body-md text-[#F87171] mt-1">{{ password_form.current_password.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider block mb-2">New Password</label>
+                        {{ password_form.new_password }}
+                        {% if password_form.new_password.errors %}
+                        <p class="font-body-md text-body-md text-[#F87171] mt-1">{{ password_form.new_password.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider block mb-2">Confirm Password</label>
+                        {{ password_form.confirm_password }}
+                        {% if password_form.confirm_password.errors %}
+                        <p class="font-body-md text-body-md text-[#F87171] mt-1">{{ password_form.confirm_password.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button type="submit" class="btn-primary px-6 py-2 rounded font-headline-md text-sm font-bold active:scale-95 transition-transform">
+                    Change Password
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="hud-card rounded-xl p-8 space-y-4">
+        <div class="flex items-center gap-3 border-b border-[#2A2A2A] pb-4">
+            <span class="material-symbols-outlined text-yellow-accent">info</span>
+            <h3 class="font-headline-lg text-headline-lg text-on-surface">Account Info</h3>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider block mb-1">Email</span>
+                <p class="font-body-md text-body-md text-on-surface">{{ request.user.email }}</p>
+            </div>
+            <div>
+                <span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider block mb-1">Username</span>
+                <p class="font-body-md text-body-md text-on-surface">{{ request.user.username|default:"Not set" }}</p>
+            </div>
+            <div>
+                <span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider block mb-1">Full Name</span>
+                <p class="font-body-md text-body-md text-on-surface">{{ request.user.get_full_name }}</p>
+            </div>
+            <div>
+                <span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider block mb-1">Member Since</span>
+                <p class="font-body-md text-body-md text-on-surface">{{ request.user.date_joined|date:"M d, Y" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

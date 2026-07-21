@@ -1,9 +1,11 @@
 from datetime import date, timedelta
 
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
+from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils.timesince import timesince
 
 from coding_questions.models import CodingQuestion
@@ -11,6 +13,8 @@ from dsa.models import DSAConcept
 from interview_questions.models import InterviewQuestion
 from leetcode.models import LeetCodeProblem
 from system_design.models import SystemDesign
+
+from .forms import ChangePasswordForm, ProfileForm
 
 
 @login_required
@@ -147,3 +151,111 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
     }
 
     return render(request, "dashboard/dashboard.html", context)
+
+
+@login_required
+def search_view(request: HttpRequest) -> HttpResponse:
+    query = request.GET.get("q", "").strip()
+    user = request.user
+
+    leetcode_results: list = []
+    dsa_results: list = []
+    interview_results: list = []
+    coding_results: list = []
+    system_design_results: list = []
+
+    if query:
+        leetcode_results = list(
+            LeetCodeProblem.objects.filter(
+                Q(question__icontains=query)
+                | Q(problem_number__icontains=query)
+                | Q(notes__icontains=query),
+                user=user,
+            )[:20]
+        )
+        dsa_results = list(
+            DSAConcept.objects.filter(
+                Q(topic__icontains=query)
+                | Q(resource_used__icontains=query)
+                | Q(notes__icontains=query),
+                user=user,
+            )[:20]
+        )
+        interview_results = list(
+            InterviewQuestion.objects.filter(
+                Q(question__icontains=query)
+                | Q(answer__icontains=query)
+                | Q(notes__icontains=query),
+                user=user,
+            )[:20]
+        )
+        coding_results = list(
+            CodingQuestion.objects.filter(
+                Q(question__icontains=query) | Q(notes__icontains=query),
+                user=user,
+            )[:20]
+        )
+        system_design_results = list(
+            SystemDesign.objects.filter(
+                Q(question__icontains=query)
+                | Q(company__icontains=query)
+                | Q(answer__icontains=query)
+                | Q(notes__icontains=query),
+                user=user,
+            )[:20]
+        )
+
+    total_results = (
+        len(leetcode_results)
+        + len(dsa_results)
+        + len(interview_results)
+        + len(coding_results)
+        + len(system_design_results)
+    )
+
+    context: dict[str, object] = {
+        "query": query,
+        "leetcode_results": leetcode_results,
+        "dsa_results": dsa_results,
+        "interview_results": interview_results,
+        "coding_results": coding_results,
+        "system_design_results": system_design_results,
+        "total_results": total_results,
+    }
+    return render(request, "dashboard/search.html", context)
+
+
+@login_required
+def settings_view(request: HttpRequest) -> HttpResponse:
+    user = request.user
+
+    if request.method == "POST":
+        form_type = request.POST.get("form_type")
+
+        if form_type == "profile":
+            profile_form = ProfileForm(request.POST, instance=user)
+            password_form = ChangePasswordForm(user=user)
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, "Profile updated successfully.")
+                return redirect("dashboard:settings")
+        elif form_type == "password":
+            profile_form = ProfileForm(instance=user)
+            password_form = ChangePasswordForm(user=user, data=request.POST)
+            if password_form.is_valid():
+                password_form.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, "Password changed successfully.")
+                return redirect("dashboard:settings")
+        else:
+            profile_form = ProfileForm(instance=user)
+            password_form = ChangePasswordForm(user=user)
+    else:
+        profile_form = ProfileForm(instance=user)
+        password_form = ChangePasswordForm(user=user)
+
+    context: dict[str, object] = {
+        "profile_form": profile_form,
+        "password_form": password_form,
+    }
+    return render(request, "dashboard/settings.html", context)

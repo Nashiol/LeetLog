@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Search - LeetLog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="max-w-[1400px] mx-auto space-y-8">
+    <div>
+        <h2 class="font-display text-display text-on-surface">Search</h2>
+        {% if query %}
+        <p class="font-body-lg text-body-lg text-on-surface-variant mt-2">
+            {{ total_results }} result{{ total_results|pluralize }} for "<span class="text-primary">{{ query }}</span>"
+        </p>
+        {% else %}
+        <p class="font-body-lg text-body-lg text-on-surface-variant mt-2">
+            Search across all your problems, notes, and questions.
+        </p>
+        {% endif %}
+    </div>
+
+    {% if query %}
+        {% if leetcode_results %}
+        <div class="space-y-4">
+            <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-yellow-accent">code</span>
+                LeetCode Problems
+                <span class="font-label-mono text-label-mono text-on-surface-variant">({{ leetcode_results|length }})</span>
+            </h3>
+            <div class="space-y-3">
+                {% for problem in leetcode_results %}
+                <a href="{% url 'leetcode:detail' problem.pk %}" class="hud-card rounded-lg p-4 flex items-center justify-between hover:border-primary/50 transition-colors group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded bg-[#222222] flex items-center justify-center flex-shrink-0 border border-[#2A2A2A]">
+                            <span class="font-label-mono text-label-mono text-on-surface-variant">#{{ problem.problem_number }}</span>
+                        </div>
+                        <div>
+                            <h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">{{ problem.question }}</h4>
+                            <div class="flex items-center gap-3 mt-1">
+                                <span class="font-label-caps text-label-caps
+                                    {% if problem.difficulty == 'easy' %}text-[#4ADE80]
+                                    {% elif problem.difficulty == 'medium' %}text-yellow-accent
+                                    {% else %}text-[#F87171]{% endif %}">
+                                    {{ problem.get_difficulty_display }}
+                                </span>
+                                <span class="font-label-mono text-label-mono text-on-surface-variant">{{ problem.programming_language }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">chevron_right</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if dsa_results %}
+        <div class="space-y-4">
+            <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-yellow-accent">account_tree</span>
+                DSA Concepts
+                <span class="font-label-mono text-label-mono text-on-surface-variant">({{ dsa_results|length }})</span>
+            </h3>
+            <div class="space-y-3">
+                {% for concept in dsa_results %}
+                <a href="{% url 'dsa:detail' concept.pk %}" class="hud-card rounded-lg p-4 flex items-center justify-between hover:border-primary/50 transition-colors group">
+                    <div class="flex items-center gap-4">
+                        <div>
+                            <h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">{{ concept.topic }}</h4>
+                            <div class="flex items-center gap-3 mt-1">
+                                <span class="font-label-caps text-label-caps
+                                    {% if concept.mastery_level == 'mastered' %}text-[#4ADE80]
+                                    {% elif concept.mastery_level == 'comfortable' %}text-yellow-accent
+                                    {% elif concept.mastery_level == 'learning' %}text-[#60A5FA]
+                                    {% else %}text-on-surface-variant{% endif %}">
+                                    {{ concept.get_mastery_level_display }}
+                                </span>
+                                <span class="font-label-mono text-label-mono text-on-surface-variant">{{ concept.resource_used }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">chevron_right</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if interview_results %}
+        <div class="space-y-4">
+            <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-yellow-accent">question_answer</span>
+                Interview Questions
+                <span class="font-label-mono text-label-mono text-on-surface-variant">({{ interview_results|length }})</span>
+            </h3>
+            <div class="space-y-3">
+                {% for q in interview_results %}
+                <a href="{% url 'interview_questions:detail' q.pk %}" class="hud-card rounded-lg p-4 flex items-center justify-between hover:border-primary/50 transition-colors group">
+                    <div>
+                        <h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">{{ q.question }}</h4>
+                    </div>
+                    <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">chevron_right</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if coding_results %}
+        <div class="space-y-4">
+            <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-yellow-accent">terminal</span>
+                Coding Questions
+                <span class="font-label-mono text-label-mono text-on-surface-variant">({{ coding_results|length }})</span>
+            </h3>
+            <div class="space-y-3">
+                {% for q in coding_results %}
+                <a href="{% url 'coding_questions:detail' q.pk %}" class="hud-card rounded-lg p-4 flex items-center justify-between hover:border-primary/50 transition-colors group">
+                    <div>
+                        <h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">{{ q.question|truncatewords:15 }}</h4>
+                        <p class="font-label-mono text-label-mono text-on-surface-variant mt-1">{{ q.date_created }}</p>
+                    </div>
+                    <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">chevron_right</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if system_design_results %}
+        <div class="space-y-4">
+            <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-yellow-accent">schema</span>
+                System Design
+                <span class="font-label-mono text-label-mono text-on-surface-variant">({{ system_design_results|length }})</span>
+            </h3>
+            <div class="space-y-3">
+                {% for q in system_design_results %}
+                <a href="{% url 'system_design:detail' q.pk %}" class="hud-card rounded-lg p-4 flex items-center justify-between hover:border-primary/50 transition-colors group">
+                    <div>
+                        <h4 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">{{ q.question|truncatewords:15 }}</h4>
+                        <span class="inline-block mt-1 px-2 py-0.5 rounded bg-primary/10 text-primary font-label-caps text-label-caps">{{ q.company }}</span>
+                    </div>
+                    <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">chevron_right</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if total_results == 0 %}
+        <div class="hud-card rounded-xl p-12 text-center">
+            <span class="material-symbols-outlined text-[48px] text-on-surface-variant/30 mb-4 block">search_off</span>
+            <p class="font-headline-md text-headline-md text-on-surface mb-1">No results found</p>
+            <p class="font-body-md text-body-md text-on-surface-variant">Try a different search term.</p>
+        </div>
+        {% endif %}
+    {% else %}
+    <div class="hud-card rounded-xl p-12 text-center">
+        <span class="material-symbols-outlined text-[48px] text-on-surface-variant/30 mb-4 block">search</span>
+        <p class="font-headline-md text-headline-md text-on-surface mb-1">Start typing to search</p>
+        <p class="font-body-md text-body-md text-on-surface-variant">Search across LeetCode, DSA, Interview, Coding, and System Design.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

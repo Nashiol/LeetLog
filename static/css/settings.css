@@ -1,0 +1,22 @@
+.form-input {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    background-color: #1A1A1A;
+    border: 1px solid #2A2A2A;
+    border-radius: 0.375rem;
+    color: #ece1d1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.25rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #EAB308;
+    box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.15);
+}
+
+.form-input::placeholder {
+    color: rgba(211, 197, 172, 0.4);
+}

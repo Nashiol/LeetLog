@@ -18,12 +18,76 @@
     <div class="flex items-center gap-2">
         {% if request.user.is_authenticated %}
             <span class="hidden sm:block text-sm text-on-surface-variant font-body-md">Hi, {{ request.user.first_name }}</span>
-            <button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-lg transition-colors">
-                <span class="material-symbols-outlined">notifications</span>
-            </button>
+            <div class="relative">
+                <button onclick="toggleNotifications()" class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-variant rounded-lg transition-colors relative">
+                    <span class="material-symbols-outlined">notifications</span>
+                    {% if notification_count > 0 %}
+                    <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] rounded-full bg-[#F87171] text-white text-[10px] font-bold flex items-center justify-center px-1">
+                        {{ notification_count }}
+                    </span>
+                    {% endif %}
+                </button>
+                <div id="notification-dropdown" class="hidden absolute right-0 top-full mt-2 w-80 hud-card rounded-xl shadow-2xl border border-[#2A2A2A] z-50 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-[#2A2A2A] flex items-center justify-between">
+                        <h4 class="font-headline-md text-headline-md text-on-surface">Notifications</h4>
+                        {% if notification_count > 0 %}
+                        <span class="font-label-mono text-label-mono text-on-surface-variant">{{ notification_count }} due</span>
+                        {% endif %}
+                    </div>
+                    <div class="max-h-80 overflow-y-auto">
+                        {% if notification_count > 0 %}
+                            {% for problem in due_problems %}
+                            <a href="{% url 'leetcode:detail' problem.pk %}" class="flex items-center gap-3 px-4 py-3 hover:bg-surface-container-high transition-colors border-b border-[#2A2A2A] last:border-b-0">
+                                <div class="w-8 h-8 rounded bg-[#222222] flex items-center justify-center flex-shrink-0 border border-[#2A2A2A]">
+                                    <span class="font-label-mono text-label-mono text-on-surface-variant text-xs">#{{ problem.problem_number }}</span>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-body-md text-body-md text-on-surface truncate">{{ problem.question }}</p>
+                                    <span class="font-label-caps text-label-caps
+                                        {% if problem.difficulty == 'easy' %}text-[#4ADE80]
+                                        {% elif problem.difficulty == 'medium' %}text-yellow-accent
+                                        {% else %}text-[#F87171]{% endif %}">
+                                        {{ problem.get_difficulty_display }}
+                                    </span>
+                                </div>
+                                <span class="material-symbols-outlined text-on-surface-variant text-[18px]">chevron_right</span>
+                            </a>
+                            {% endfor %}
+                        {% else %}
+                        <div class="px-4 py-8 text-center">
+                            <span class="material-symbols-outlined text-[32px] text-on-surface-variant/30 mb-2 block">notifications_off</span>
+                            <p class="font-body-md text-body-md text-on-surface-variant">No problems due for review.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% if notification_count > 0 %}
+                    <div class="px-4 py-3 border-t border-[#2A2A2A]">
+                        <a href="{% url 'leetcode:list' %}" class="font-label-mono text-label-mono text-primary hover:text-primary/80 transition-colors">
+                            View all LeetCode problems →
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
             <div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center ml-2">
                 <span class="font-label-mono text-label-mono text-primary">{{ request.user.first_name.0 }}</span>
             </div>
         {% endif %}
     </div>
 </header>
+
+<script>
+function toggleNotifications() {
+    const dropdown = document.getElementById('notification-dropdown');
+    dropdown.classList.toggle('hidden');
+}
+
+document.addEventListener('click', function(e) {
+    const dropdown = document.getElementById('notification-dropdown');
+    if (!dropdown) return;
+    const bell = dropdown.previousElementSibling;
+    if (!dropdown.contains(e.target) && !bell.contains(e.target)) {
+        dropdown.classList.add('hidden');
+    }
+});
+</script>

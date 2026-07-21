@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.timesince import timesince

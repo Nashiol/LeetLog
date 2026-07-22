@@ -130,7 +130,7 @@
 
     {% include "sidebar.html" %}
 
-    <main id="main-content" data-sidebar-expanded="true" class="flex-1 ml-0 md:ml-sidebar-width flex flex-col h-screen overflow-hidden">
+    <main id="main-content" data-sidebar-expanded="true" class="flex-1 ml-0 {% if request.user.is_authenticated %}md:ml-sidebar-width{% endif %} flex flex-col h-screen overflow-hidden">
         {% include "navbar.html" %}
 
         {% if request.user.is_authenticated %}

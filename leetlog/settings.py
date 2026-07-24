@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'dashboard',
     'leetcode',
     'dsa',
+    'jobs',
     'interview_questions',
     'coding_questions',
     'system_design',

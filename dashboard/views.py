@@ -11,6 +11,7 @@ from django.utils.timesince import timesince
 from coding_questions.models import CodingQuestion
 from dsa.models import DSAConcept
 from interview_questions.models import InterviewQuestion
+from jobs.models import JobApplication
 from leetcode.models import LeetCodeProblem
 from system_design.models import SystemDesign
 
@@ -80,6 +81,11 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
         .filter(user=user)
         .values_list("created_at__date", flat=True)
     )
+    job_dates = (
+        JobApplication.objects
+        .filter(user=user)
+        .values_list("created_at__date", flat=True)
+    )
     active_dates = sorted(
         set(
             list(leetcode_dates)
@@ -87,6 +93,7 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
             + list(interview_dates)
             + list(coding_dates)
             + list(system_design_dates)
+            + list(job_dates)
         ),
         reverse=True,
     )
@@ -104,6 +111,7 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
     recent_interview = InterviewQuestion.objects.filter(user=user)[:5]
     recent_coding = CodingQuestion.objects.filter(user=user)[:5]
     recent_system_design = SystemDesign.objects.filter(user=user)[:5]
+    recent_jobs = JobApplication.objects.filter(user=user)[:5]
     activity_items: list[dict[str, str]] = []
     for p in recent_problems:
         activity_items.append({
@@ -129,6 +137,11 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
         activity_items.append({
             "description": f"Added system design Q: {sd.question[:60]} ({sd.company})",
             "time": sd.created_at,
+        })
+    for j in recent_jobs:
+        activity_items.append({
+            "description": f"Applied to {j.job_title} at {j.company}",
+            "time": j.created_at,
         })
     activity_items.sort(key=lambda x: x["time"], reverse=True)
     recent_activity: list[dict[str, str]] = [

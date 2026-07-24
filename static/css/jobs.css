@@ -1,0 +1,78 @@
+.job-status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.status-draft {
+    background-color: rgba(161, 161, 170, 0.15);
+    color: #A1A1AA;
+}
+
+.status-applied {
+    background-color: rgba(96, 165, 250, 0.15);
+    color: #60A5FA;
+}
+
+.status-interview {
+    background-color: rgba(234, 179, 8, 0.15);
+    color: #EAB308;
+}
+
+.status-offer {
+    background-color: rgba(74, 222, 128, 0.15);
+    color: #4ADE80;
+}
+
+.status-rejected {
+    background-color: rgba(248, 113, 113, 0.15);
+    color: #F87171;
+}
+
+.status-expired {
+    background-color: rgba(161, 161, 170, 0.08);
+    color: #71717A;
+}
+
+.status-archived {
+    background-color: rgba(161, 161, 170, 0.08);
+    color: #71717A;
+}
+
+.toggle-checkbox {
+    appearance: none;
+    width: 2.25rem;
+    height: 1.25rem;
+    background-color: #2A2A2A;
+    border-radius: 9999px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: 1px solid #4f4633;
+    flex-shrink: 0;
+}
+
+.toggle-checkbox::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 0.875rem;
+    height: 0.875rem;
+    background-color: #A1A1AA;
+    border-radius: 9999px;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.toggle-checkbox:checked {
+    background-color: #EAB308;
+    border-color: #EAB308;
+}
+
+.toggle-checkbox:checked::after {
+    transform: translateX(1rem);
+    background-color: #0F0F0F;
+}

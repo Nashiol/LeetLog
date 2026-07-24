@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ job.job_title }} — {{ job.company }} - LeetLog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/jobs.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="max-w-[1200px] mx-auto">
+    <div class="mb-4">
+        <a href="{% url 'jobs:list' %}" class="text-on-surface-variant hover:text-primary transition-colors font-label-mono text-label-mono inline-flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+            Back to Jobs
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-card-gap">
+        <div class="xl:col-span-8 flex flex-col gap-6">
+            <div class="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-6 relative overflow-hidden group">
+                <div class="absolute -right-20 -top-20 w-40 h-40 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors duration-500"></div>
+
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div>
+                        <h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">{{ job.job_title }}</h1>
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <span class="font-body-lg text-body-lg text-on-surface-variant">{{ job.company }}</span>
+                            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-bold job-status-badge status-{{ job.job_status }}">
+                                {{ job.get_job_status_display }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <a href="{% url 'jobs:edit' job.pk %}"
+                           class="border border-outline-variant text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest rounded-lg p-2 transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">edit</span>
+                        </a>
+                        <form method="post" action="{% url 'jobs:delete' job.pk %}" class="inline"
+                              onsubmit="return confirm('Delete this job application?')">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="border border-outline-variant text-on-surface-variant hover:text-error hover:bg-[rgba(255,180,171,0.1)] rounded-lg p-2 transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4 mb-4 relative z-10">
+                    <a href="{{ job.job_url }}" target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-1 text-primary hover:text-primary/80 transition-colors font-label-mono text-label-mono">
+                        <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+                        View Job Posting
+                    </a>
+                </div>
+
+                {% if job.job_description %}
+                <div class="mt-6 border-t border-[#2A2A2A] pt-6 relative z-10">
+                    <h3 class="font-label-caps text-label-caps text-[#A1A1AA] mb-3">DESCRIPTION</h3>
+                    <div class="notes-content font-body-md text-body-md text-on-surface-variant">{{ job.job_description|safe }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="xl:col-span-4">
+            <div class="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg overflow-hidden">
+                <div class="flex items-center justify-between px-4 py-3 border-b border-[#2A2A2A] bg-[#222222]">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#FBBF24] text-[18px]">info</span>
+                        <span class="font-label-mono text-label-mono text-on-surface">Job Details</span>
+                    </div>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="font-label-mono text-label-mono text-on-surface-variant">Status</span>
+                        <span class="job-status-badge status-{{ job.job_status }}">
+                            {{ job.get_job_status_display }}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="font-label-mono text-label-mono text-on-surface-variant">Type</span>
+                        <span class="font-label-mono text-label-mono text-on-surface">{{ job.get_job_type_display }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="font-label-mono text-label-mono text-on-surface-variant">Location</span>
+                        <span class="font-label-mono text-label-mono text-on-surface">{{ job.job_location }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="font-label-mono text-label-mono text-on-surface-variant">Salary</span>
+                        <span class="font-label-mono text-label-mono text-on-surface">
+                            {% if job.salary_range %}{{ job.get_salary_range_display }}{% else %}—{% endif %}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="font-label-mono text-label-mono text-on-surface-variant">Source</span>
+                        <span class="font-label-mono text-label-mono text-on-surface">{{ job.get_job_source_display }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="font-label-mono text-label-mono text-on-surface-variant">Due Date</span>
+                        <span class="font-label-mono text-label-mono text-on-surface">
+                            {% if job.due_date %}{{ job.due_date|date:"M d, Y" }}{% else %}—{% endif %}
+                        </span>
+                    </div>
+                    {% if job.date_applied %}
+                    <div class="flex items-center justify-between">
+                        <span class="font-label-mono text-label-mono text-on-surface-variant">Date Applied</span>
+                        <span class="font-label-mono text-label-mono text-on-surface">{{ job.date_applied|date:"M d, Y" }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="flex items-center justify-between">
+                        <span class="font-label-mono text-label-mono text-on-surface-variant">Created</span>
+                        <span class="font-label-mono text-label-mono text-on-surface">{{ job.created_at|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

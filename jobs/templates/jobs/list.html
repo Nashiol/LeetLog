@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Job Applications - LeetLog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/jobs.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="max-w-[1400px] mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-1">Job Applications</h2>
+            <p class="text-on-surface-variant text-sm">Track your job applications and interview progress.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <form method="get" class="relative">
+                <select name="status" onchange="this.form.submit()"
+                        class="appearance-none bg-surface-container-low border border-outline-variant text-on-surface font-label-mono text-label-mono rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-primary cursor-pointer hover:bg-surface-container-highest transition-colors">
+                    <option value="">All Statuses</option>
+                    <option value="draft" {% if current_status == 'draft' %}selected{% endif %}>Draft</option>
+                    <option value="applied" {% if current_status == 'applied' %}selected{% endif %}>Applied</option>
+                    <option value="interview" {% if current_status == 'interview' %}selected{% endif %}>Interview</option>
+                    <option value="offer" {% if current_status == 'offer' %}selected{% endif %}>Offer</option>
+                    <option value="rejected" {% if current_status == 'rejected' %}selected{% endif %}>Rejected</option>
+                    <option value="expired" {% if current_status == 'expired' %}selected{% endif %}>Expired</option>
+                    <option value="archived" {% if current_status == 'archived' %}selected{% endif %}>Archived</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-lg">expand_more</span>
+            </form>
+            <a href="{% url 'jobs:create' %}"
+               class="bg-primary-container text-on-primary-container font-headline-md text-sm font-bold py-2.5 px-5 rounded-lg hover:brightness-110 transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(234,179,8,0.15)] hover:shadow-[0_0_20px_rgba(234,179,8,0.25)]">
+                <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+                Add Job
+            </a>
+        </div>
+    </div>
+
+    {% if jobs %}
+    <div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-outline-variant bg-surface-container-lowest/50">
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant">Job Title</th>
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant">Company</th>
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant w-32">Status</th>
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant w-28">Type</th>
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant w-40">Salary</th>
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant w-32">Source</th>
+                    <th class="py-4 px-6 font-label-caps text-label-caps text-on-surface-variant w-32">Due Date</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant font-label-mono text-label-mono text-on-surface">
+                {% for job in jobs %}
+                <tr class="hover:bg-surface-container-highest transition-colors group cursor-pointer"
+                    onclick="window.location='{% url 'jobs:detail' job.pk %}'">
+                    <td class="py-4 px-6">
+                        <span class="font-headline-md text-sm font-medium group-hover:text-primary transition-colors">
+                            {{ job.job_title }}
+                        </span>
+                    </td>
+                    <td class="py-4 px-6 text-on-surface-variant">{{ job.company }}</td>
+                    <td class="py-4 px-6">
+                        <span class="inline-flex items-center px-2 py-1 rounded text-xs font-bold job-status-badge status-{{ job.job_status }}">
+                            {{ job.get_job_status_display }}
+                        </span>
+                    </td>
+                    <td class="py-4 px-6 text-on-surface-variant">{{ job.get_job_type_display }}</td>
+                    <td class="py-4 px-6 text-on-surface-variant">
+                        {% if job.salary_range %}{{ job.get_salary_range_display }}{% else %}—{% endif %}
+                    </td>
+                    <td class="py-4 px-6 text-on-surface-variant">{{ job.get_job_source_display }}</td>
+                    <td class="py-4 px-6 text-on-surface-variant">
+                        {% if job.due_date %}{{ job.due_date|date:"M d, Y" }}{% else %}—{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="border-t border-outline-variant bg-surface-container-lowest/30 px-6 py-3 flex items-center justify-between">
+            <span class="font-label-mono text-label-mono text-on-surface-variant">
+                Showing {{ jobs|length }} application{{ jobs|length|pluralize }}
+            </span>
+        </div>
+    </div>
+    {% else %}
+    <div class="hud-card rounded-xl p-12 text-center">
+        <span class="material-symbols-outlined text-[48px] text-on-surface-variant/30 mb-4 block">work</span>
+        <p class="font-headline-md text-headline-md text-on-surface mb-1">
+            {% if current_status %}No applications found{% else %}No job applications yet{% endif %}
+        </p>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+            {% if current_status %}Try adjusting your filter.{% else %}Start tracking your job applications.{% endif %}
+        </p>
+        {% if not current_status %}
+        <a href="{% url 'jobs:create' %}"
+           class="inline-flex items-center gap-2 bg-primary-container text-on-primary-container font-headline-md text-sm font-bold py-2.5 px-5 rounded-lg hover:brightness-110 transition-all">
+            <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+            Add First Application
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

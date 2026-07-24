@@ -14,6 +14,7 @@ urlpatterns = [
     path('interview/', include('interview_questions.urls')),
     path('coding/', include('coding_questions.urls')),
     path('system-design/', include('system_design.urls')),
+    path('jobs/', include('jobs.urls')),
 ]
 
 if settings.DEBUG:

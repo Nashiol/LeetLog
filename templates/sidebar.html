@@ -62,6 +62,13 @@
             <span class="material-symbols-outlined text-[20px] flex-shrink-0">schema</span>
             <span class="sidebar-label font-headline-md text-headline-md text-sm">System Design</span>
         </a>
+
+        <a href="{% url 'jobs:list' %}"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200
+                  {% if request.resolver_match.app_name == 'jobs' %}border-l-[3px] border-primary text-on-surface font-bold bg-surface-container-high{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest{% endif %}">
+            <span class="material-symbols-outlined text-[20px] flex-shrink-0">work</span>
+            <span class="sidebar-label font-headline-md text-headline-md text-sm">Job Applications</span>
+        </a>
     </div>
 
     <div class="mt-auto flex flex-col gap-1 p-2 border-t border-outline-variant">

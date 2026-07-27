@@ -4,3 +4,4 @@ __pycache__/
 *opencode.json
 *.sqlite3
 *AGENTS.md
+staticfiles/

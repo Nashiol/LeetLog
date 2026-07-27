@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,11 +78,25 @@ WSGI_APPLICATION = 'leetlog.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("SUPABASE_DB_NAME"),
+        "USER": config("SUPABASE_DB_USER"),
+        "PASSWORD": config("SUPABASE_DB_PASSWORD"),
+        "HOST": config("SUPABASE_DB_HOST"),
+        "PORT": config("SUPABASE_DB_PORT", cast=int, default=5432),
+        "OPTIONS": {
+            "sslmode": "require",
+        },
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation

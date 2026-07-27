@@ -4,6 +4,9 @@
 
 LeetLog is a full-stack web application that helps developers track, review, and master coding interview preparation. It features five distinct tracking areas and a built-in Spaced Repetition System (SRS) powered by the SM-2 algorithm.
 
+![LeetLog Dashboard](static/images/screenshot1.png)
+![LeetLog LeetCode Tracker](static/images/screenshot2.png)
+
 ## Features
 
 - **LeetCode Tracker** — Log problems with difficulty, language, solution links, and personal notes

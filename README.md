@@ -170,9 +170,6 @@ leetlog/
 
 - Mobile app (PWA)
 - LeetCode API integration (auto-fill problem details)
-- GitHub integration (auto-import repos)
-- PDF export
-- Dark/light mode toggle
 - Shareable profiles
 - AI hint system
 - Interview simulator / timed mock mode

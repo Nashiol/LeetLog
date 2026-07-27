@@ -19,15 +19,16 @@ def system_design_list_view(request: HttpRequest) -> HttpResponse:
 @login_required
 def system_design_create_view(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
-        form = SystemDesignForm(request.POST)
+        form = SystemDesignForm(request.POST, user=request.user)
         if form.is_valid():
             question = form.save(commit=False)
             question.user = request.user
             question.save()
+            form.save_m2m()
             messages.success(request, "System design question added successfully.")
             return redirect("system_design:list")
     else:
-        form = SystemDesignForm()
+        form = SystemDesignForm(user=request.user)
 
     return render(request, "system_design/new.html", {"form": form})
 
@@ -50,13 +51,13 @@ def system_design_edit_view(request: HttpRequest, pk: str) -> HttpResponse:
         user=request.user,
     )
     if request.method == "POST":
-        form = SystemDesignForm(request.POST, instance=question)
+        form = SystemDesignForm(request.POST, instance=question, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, "System design question updated successfully.")
             return redirect("system_design:detail", pk=question.pk)
     else:
-        form = SystemDesignForm(instance=question)
+        form = SystemDesignForm(instance=question, user=request.user)
 
     context: dict[str, object] = {
         "form": form,

@@ -18,6 +18,7 @@ class InterviewQuestion(models.Model):
     question = models.CharField(max_length=255)
     answer = models.TextField()
     notes = models.TextField(blank=True)
+    tags = models.ManyToManyField("tags.Tag", blank=True, related_name="interview_questions")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -28,7 +28,7 @@ def job_list_view(request: HttpRequest) -> HttpResponse:
 @login_required
 def job_create_view(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
-        form = JobApplicationForm(request.POST)
+        form = JobApplicationForm(request.POST, user=request.user)
         if form.is_valid():
             job = form.save(commit=False)
             job.user = request.user
@@ -38,10 +38,11 @@ def job_create_view(request: HttpRequest) -> HttpResponse:
                 job.date_applied = date.today()
 
             job.save()
+            form.save_m2m()
             messages.success(request, "Job application added successfully.")
             return redirect("jobs:list")
     else:
-        form = JobApplicationForm()
+        form = JobApplicationForm(user=request.user)
 
     return render(request, "jobs/new.html", {"form": form})
 
@@ -64,7 +65,7 @@ def job_edit_view(request: HttpRequest, pk: str) -> HttpResponse:
         user=request.user,
     )
     if request.method == "POST":
-        form = JobApplicationForm(request.POST, instance=job)
+        form = JobApplicationForm(request.POST, instance=job, user=request.user)
         if form.is_valid():
             updated = form.save(commit=False)
 
@@ -76,10 +77,11 @@ def job_edit_view(request: HttpRequest, pk: str) -> HttpResponse:
                 updated.date_applied = None
 
             updated.save()
+            form.save_m2m()
             messages.success(request, "Job application updated successfully.")
             return redirect("jobs:detail", pk=job.pk)
     else:
-        form = JobApplicationForm(instance=job)
+        form = JobApplicationForm(instance=job, user=request.user)
 
     context: dict[str, object] = {
         "form": form,

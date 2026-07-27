@@ -4,11 +4,18 @@ from .models import InterviewQuestion
 
 
 class InterviewQuestionForm(forms.ModelForm):
+    def __init__(self, *args: object, user: object = None, **kwargs: object) -> None:
+        super().__init__(*args, **kwargs)
+        if user:
+            from tags.models import Tag
+            self.fields["tags"].queryset = Tag.objects.filter(user=user)
+
     class Meta:
         model = InterviewQuestion
         fields = [
             "question",
             "answer",
+            "tags",
             "notes",
         ]
         widgets = {
@@ -20,6 +27,9 @@ class InterviewQuestionForm(forms.ModelForm):
                 "class": "form-input",
                 "rows": 6,
                 "placeholder": "Your model answer...",
+            }),
+            "tags": forms.SelectMultiple(attrs={
+                "class": "form-input",
             }),
             "notes": forms.HiddenInput(attrs={
                 "id": "notes-hidden",

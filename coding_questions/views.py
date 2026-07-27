@@ -19,15 +19,16 @@ def coding_list_view(request: HttpRequest) -> HttpResponse:
 @login_required
 def coding_create_view(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
-        form = CodingQuestionForm(request.POST)
+        form = CodingQuestionForm(request.POST, user=request.user)
         if form.is_valid():
             question = form.save(commit=False)
             question.user = request.user
             question.save()
+            form.save_m2m()
             messages.success(request, "Coding question added successfully.")
             return redirect("coding_questions:list")
     else:
-        form = CodingQuestionForm()
+        form = CodingQuestionForm(user=request.user)
 
     return render(request, "coding_questions/new.html", {"form": form})
 
@@ -50,13 +51,13 @@ def coding_edit_view(request: HttpRequest, pk: str) -> HttpResponse:
         user=request.user,
     )
     if request.method == "POST":
-        form = CodingQuestionForm(request.POST, instance=question)
+        form = CodingQuestionForm(request.POST, instance=question, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, "Coding question updated successfully.")
             return redirect("coding_questions:detail", pk=question.pk)
     else:
-        form = CodingQuestionForm(instance=question)
+        form = CodingQuestionForm(instance=question, user=request.user)
 
     context: dict[str, object] = {
         "form": form,

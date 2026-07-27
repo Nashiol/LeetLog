@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ tag.name }} - Tags - LeetLog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tags.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="max-w-[1200px] mx-auto space-y-6">
+    <div class="mb-4">
+        <a href="{% url 'tags:list' %}" class="text-on-surface-variant hover:text-primary transition-colors font-label-mono text-label-mono inline-flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+            Back to Tags
+        </a>
+    </div>
+
+    <div class="flex items-center gap-3">
+        <span class="w-4 h-4 rounded-full" style="background: {{ tag.color }};"></span>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface">{{ tag.name }}</h2>
+        <span class="text-on-surface-variant text-sm">/ {{ tag.folder.name }}</span>
+        <span class="text-on-surface-variant text-sm ml-2">({{ total }} item{{ total|pluralize }})</span>
+    </div>
+
+    {% if leetcode_results %}
+    <div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden">
+        <div class="px-6 py-3 border-b border-outline-variant bg-surface-container-lowest/50 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[18px]">code</span>
+            <span class="font-label-caps text-label-caps text-on-surface-variant">LEETCODE PROBLEMS ({{ leetcode_results|length }})</span>
+        </div>
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-outline-variant">
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">#</th>
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Title</th>
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Difficulty</th>
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Date</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant font-label-mono text-label-mono text-on-surface">
+                {% for p in leetcode_results %}
+                <tr class="hover:bg-surface-container-highest transition-colors cursor-pointer"
+                    onclick="window.location='{% url 'leetcode:detail' p.pk %}'">
+                    <td class="py-3 px-6">{{ p.problem_number }}</td>
+                    <td class="py-3 px-6 font-headline-md text-sm">{{ p.question }}</td>
+                    <td class="py-3 px-6">
+                        <span class="difficulty-badge difficulty-{{ p.difficulty }}">{{ p.get_difficulty_display }}</span>
+                    </td>
+                    <td class="py-3 px-6 text-on-surface-variant">{{ p.date_solved|date:"M d, Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {% if dsa_results %}
+    <div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden">
+        <div class="px-6 py-3 border-b border-outline-variant bg-surface-container-lowest/50 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[18px]">account_tree</span>
+            <span class="font-label-caps text-label-caps text-on-surface-variant">DSA CONCEPTS ({{ dsa_results|length }})</span>
+        </div>
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-outline-variant">
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Topic</th>
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Mastery</th>
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Date</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant font-label-mono text-label-mono text-on-surface">
+                {% for c in dsa_results %}
+                <tr class="hover:bg-surface-container-highest transition-colors cursor-pointer"
+                    onclick="window.location='{% url 'dsa:detail' c.pk %}'">
+                    <td class="py-3 px-6 font-headline-md text-sm">{{ c.topic }}</td>
+                    <td class="py-3 px-6">
+                        <span class="inline-flex items-center px-2 py-1 rounded text-xs font-bold mastery-badge mastery-{{ c.mastery_level }}">
+                            {{ c.get_mastery_level_display }}
+                        </span>
+                    </td>
+                    <td class="py-3 px-6 text-on-surface-variant">{{ c.date_studied|date:"M d, Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {% if interview_results %}
+    <div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden">
+        <div class="px-6 py-3 border-b border-outline-variant bg-surface-container-lowest/50 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[18px]">question_answer</span>
+            <span class="font-label-caps text-label-caps text-on-surface-variant">INTERVIEW QUESTIONS ({{ interview_results|length }})</span>
+        </div>
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-outline-variant">
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Question</th>
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Date</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant font-label-mono text-label-mono text-on-surface">
+                {% for q in interview_results %}
+                <tr class="hover:bg-surface-container-highest transition-colors cursor-pointer"
+                    onclick="window.location='{% url 'interview_questions:detail' q.pk %}'">
+                    <td class="py-3 px-6 font-headline-md text-sm">{{ q.question }}</td>
+                    <td class="py-3 px-6 text-on-surface-variant">{{ q.created_at|date:"M d, Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {% if coding_results %}
+    <div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden">
+        <div class="px-6 py-3 border-b border-outline-variant bg-surface-container-lowest/50 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[18px]">terminal</span>
+            <span class="font-label-caps text-label-caps text-on-surface-variant">CODING QUESTIONS ({{ coding_results|length }})</span>
+        </div>
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-outline-variant">
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Question</th>
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Date</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant font-label-mono text-label-mono text-on-surface">
+                {% for q in coding_results %}
+                <tr class="hover:bg-surface-container-highest transition-colors cursor-pointer"
+                    onclick="window.location='{% url 'coding_questions:detail' q.pk %}'">
+                    <td class="py-3 px-6 font-headline-md text-sm">{{ q.question|truncatewords:10 }}</td>
+                    <td class="py-3 px-6 text-on-surface-variant">{{ q.date_created|date:"M d, Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {% if system_design_results %}
+    <div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden">
+        <div class="px-6 py-3 border-b border-outline-variant bg-surface-container-lowest/50 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[18px]">schema</span>
+            <span class="font-label-caps text-label-caps text-on-surface-variant">SYSTEM DESIGN ({{ system_design_results|length }})</span>
+        </div>
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-outline-variant">
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Question</th>
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Company</th>
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Date</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant font-label-mono text-label-mono text-on-surface">
+                {% for s in system_design_results %}
+                <tr class="hover:bg-surface-container-highest transition-colors cursor-pointer"
+                    onclick="window.location='{% url 'system_design:detail' s.pk %}'">
+                    <td class="py-3 px-6 font-headline-md text-sm">{{ s.question|truncatewords:10 }}</td>
+                    <td class="py-3 px-6 text-on-surface-variant">{{ s.company }}</td>
+                    <td class="py-3 px-6 text-on-surface-variant">{{ s.created_at|date:"M d, Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {% if job_results %}
+    <div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden">
+        <div class="px-6 py-3 border-b border-outline-variant bg-surface-container-lowest/50 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[18px]">work</span>
+            <span class="font-label-caps text-label-caps text-on-surface-variant">JOB APPLICATIONS ({{ job_results|length }})</span>
+        </div>
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-outline-variant">
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Title</th>
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Company</th>
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Status</th>
+                    <th class="py-3 px-6 font-label-caps text-label-caps text-on-surface-variant">Date</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant font-label-mono text-label-mono text-on-surface">
+                {% for j in job_results %}
+                <tr class="hover:bg-surface-container-highest transition-colors cursor-pointer"
+                    onclick="window.location='{% url 'jobs:detail' j.pk %}'">
+                    <td class="py-3 px-6 font-headline-md text-sm">{{ j.job_title }}</td>
+                    <td class="py-3 px-6 text-on-surface-variant">{{ j.company }}</td>
+                    <td class="py-3 px-6">
+                        <span class="job-status-badge status-{{ j.job_status }}">{{ j.get_job_status_display }}</span>
+                    </td>
+                    <td class="py-3 px-6 text-on-surface-variant">{{ j.created_at|date:"M d, Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {% if not leetcode_results and not dsa_results and not interview_results and not coding_results and not system_design_results and not job_results %}
+    <div class="hud-card rounded-xl p-12 text-center">
+        <span class="material-symbols-outlined text-[48px] text-on-surface-variant/30 mb-4 block">label_off</span>
+        <p class="font-headline-md text-headline-md text-on-surface mb-1">No items with this tag</p>
+        <p class="font-body-md text-body-md text-on-surface-variant">Add this tag to items in the add/edit pages of any tab.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

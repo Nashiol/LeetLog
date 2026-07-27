@@ -19,6 +19,7 @@ class CodingQuestion(models.Model):
     repository_link = models.URLField()
     notes = models.TextField(blank=True)
     date_created = models.DateField()
+    tags = models.ManyToManyField("tags.Tag", blank=True, related_name="coding_questions")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

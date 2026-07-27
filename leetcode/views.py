@@ -38,17 +38,18 @@ def leetcode_list_view(request: HttpRequest) -> HttpResponse:
 @login_required
 def leetcode_create_view(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
-        form = LeetCodeProblemForm(request.POST)
+        form = LeetCodeProblemForm(request.POST, user=request.user)
         if form.is_valid():
             problem = form.save(commit=False)
             problem.user = request.user
             problem.next_review_date = date.today()
             problem.status = "in_progress"
             problem.save()
+            form.save_m2m()
             messages.success(request, "Problem added successfully.")
             return redirect("leetcode:list")
     else:
-        form = LeetCodeProblemForm()
+        form = LeetCodeProblemForm(user=request.user)
 
     return render(request, "leetcode/new.html", {"form": form})
 
@@ -76,13 +77,13 @@ def leetcode_edit_view(request: HttpRequest, pk: str) -> HttpResponse:
         user=request.user,
     )
     if request.method == "POST":
-        form = LeetCodeProblemForm(request.POST, instance=problem)
+        form = LeetCodeProblemForm(request.POST, instance=problem, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, "Problem updated successfully.")
             return redirect("leetcode:detail", pk=problem.pk)
     else:
-        form = LeetCodeProblemForm(instance=problem)
+        form = LeetCodeProblemForm(instance=problem, user=request.user)
 
     context: dict[str, object] = {
         "form": form,

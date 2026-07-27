@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Tags - LeetLog{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tags.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="max-w-[1200px] mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-1">Tags</h2>
+            <p class="text-on-surface-variant text-sm">Organize your content with folders and tags.</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-headline-md text-headline-md text-on-surface">Folders</h3>
+                <button onclick="document.getElementById('create-folder-form').classList.toggle('hidden')"
+                        class="text-on-surface-variant hover:text-primary transition-colors font-label-mono text-label-mono text-xs flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">add</span>
+                    New Folder
+                </button>
+            </div>
+
+            <div id="create-folder-form" class="hidden bg-surface-container-low border border-outline-variant rounded-lg p-4 mb-4">
+                <form method="post" action="{% url 'tags:folder_create' %}" class="space-y-3">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="form-label">Folder Name</label>
+                        {{ folder_form.name }}
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="submit"
+                                class="bg-primary-container text-on-primary-container font-headline-md text-xs font-bold py-2 px-4 rounded-lg hover:brightness-110 transition-all">
+                            Create
+                        </button>
+                        <button type="button" onclick="document.getElementById('create-folder-form').classList.add('hidden')"
+                                class="text-on-surface-variant text-xs hover:text-on-surface transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {% if folders %}
+            <div class="space-y-3">
+                {% for folder in folders %}
+                <div class="bg-surface-container-low border border-outline-variant rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-on-surface-variant text-[18px]">folder</span>
+                            <span class="font-headline-md text-sm font-medium text-on-surface">{{ folder.name }}</span>
+                            <span class="text-on-surface-variant text-xs">({{ folder.tags.count }})</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <a href="{% url 'tags:folder_edit' folder.pk %}"
+                               class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded">
+                                <span class="material-symbols-outlined text-[16px]">edit</span>
+                            </a>
+                            <form method="post" action="{% url 'tags:folder_delete' folder.pk %}" class="inline"
+                                  onsubmit="return confirm('Delete this folder and all its tags?')">
+                                {% csrf_token %}
+                                <button type="submit" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded">
+                                    <span class="material-symbols-outlined text-[16px]">delete</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% if folder.tags.all %}
+                    <div class="flex flex-wrap gap-2">
+                        {% for tag in folder.tags.all %}
+                        <a href="{% url 'tags:detail' tag.pk %}"
+                           class="tag-pill group flex items-center gap-1.5 pr-1.5"
+                           style="background: {{ tag.color }}20; border: 1px solid {{ tag.color }}40; color: {{ tag.color }};">
+                            <span class="w-2 h-2 rounded-full flex-shrink-0" style="background: {{ tag.color }};"></span>
+                            <span class="font-label-mono text-xs">{{ tag.name }}</span>
+                            <span class="material-symbols-outlined text-[12px] opacity-0 group-hover:opacity-100 transition-opacity">chevron_right</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-on-surface-variant text-xs italic">No tags yet.</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="bg-surface-container-low border border-outline-variant rounded-xl p-12 text-center">
+                <span class="material-symbols-outlined text-[48px] text-on-surface-variant/30 mb-4 block">label</span>
+                <p class="font-headline-md text-headline-md text-on-surface mb-1">No folders yet</p>
+                <p class="font-body-md text-body-md text-on-surface-variant mb-4">Create a folder to start organizing tags.</p>
+                <button onclick="document.getElementById('create-folder-form').classList.remove('hidden')"
+                        class="inline-flex items-center gap-2 bg-primary-container text-on-primary-container font-headline-md text-sm font-bold py-2.5 px-5 rounded-lg hover:brightness-110 transition-all">
+                    <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+                    Create First Folder
+                </button>
+            </div>
+            {% endif %}
+        </div>
+
+        <div>
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-headline-md text-headline-md text-on-surface">Create Tag</h3>
+            </div>
+
+            {% if folders %}
+            <div class="bg-surface-container-low border border-outline-variant rounded-lg p-4">
+                <form method="post" action="{% url 'tags:tag_create' %}" class="space-y-4">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="form-label">Folder</label>
+                        {{ tag_form.folder }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tag Name</label>
+                        {{ tag_form.name }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Color</label>
+                        <div class="flex items-center gap-3">
+                            <div class="color-presets flex gap-2">
+                                <button type="button" class="color-preset" data-color="#EAB308" style="background: #EAB308;" onclick="selectColor('#EAB308')"></button>
+                                <button type="button" class="color-preset" data-color="#60A5FA" style="background: #60A5FA;" onclick="selectColor('#60A5FA')"></button>
+                                <button type="button" class="color-preset" data-color="#4ADE80" style="background: #4ADE80;" onclick="selectColor('#4ADE80')"></button>
+                                <button type="button" class="color-preset" data-color="#F87171" style="background: #F87171;" onclick="selectColor('#F87171')"></button>
+                                <button type="button" class="color-preset" data-color="#A78BFA" style="background: #A78BFA;" onclick="selectColor('#A78BFA')"></button>
+                                <button type="button" class="color-preset" data-color="#F472B6" style="background: #F472B6;" onclick="selectColor('#F472B6')"></button>
+                                <button type="button" class="color-preset" data-color="#34D399" style="background: #34D399;" onclick="selectColor('#34D399')"></button>
+                                <button type="button" class="color-preset" data-color="#FB923C" style="background: #FB923C;" onclick="selectColor('#FB923C')"></button>
+                            </div>
+                            {{ tag_form.color }}
+                        </div>
+                    </div>
+                    <button type="submit"
+                            class="bg-primary-container text-on-primary-container font-headline-md text-xs font-bold py-2 px-4 rounded-lg hover:brightness-110 transition-all">
+                        Create Tag
+                    </button>
+                </form>
+            </div>
+            {% else %}
+            <div class="bg-surface-container-low border border-outline-variant rounded-lg p-8 text-center">
+                <p class="text-on-surface-variant text-sm">Create a folder first before adding tags.</p>
+            </div>
+            {% endif %}
+
+            {% if folders %}
+            <div class="mt-6">
+                <h4 class="font-label-caps text-label-caps text-on-surface-variant mb-3">ALL TAGS</h4>
+                <div class="space-y-2">
+                    {% for folder in folders %}
+                        {% for tag in folder.tags.all %}
+                        <div class="flex items-center justify-between bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5">
+                            <a href="{% url 'tags:detail' tag.pk %}" class="flex items-center gap-2 flex-1 min-w-0">
+                                <span class="w-3 h-3 rounded-full flex-shrink-0" style="background: {{ tag.color }};"></span>
+                                <span class="font-label-mono text-sm text-on-surface truncate">{{ tag.name }}</span>
+                                <span class="text-on-surface-variant text-xs">/ {{ folder.name }}</span>
+                            </a>
+                            <div class="flex items-center gap-1 ml-2">
+                                <a href="{% url 'tags:tag_edit' tag.pk %}"
+                                   class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded">
+                                    <span class="material-symbols-outlined text-[14px]">edit</span>
+                                </a>
+                                <form method="post" action="{% url 'tags:tag_delete' tag.pk %}" class="inline"
+                                      onsubmit="return confirm('Delete this tag?')">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded">
+                                        <span class="material-symbols-outlined text-[14px]">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function selectColor(hex) {
+    document.querySelector('input[name="color"]').value = hex;
+    document.querySelectorAll('.color-preset').forEach(el => {
+        el.classList.toggle('active', el.dataset.color === hex);
+    });
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const current = document.querySelector('input[name="color"]').value;
+    if (current) selectColor(current);
+});
+</script>
+{% endblock %}

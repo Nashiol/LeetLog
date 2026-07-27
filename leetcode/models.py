@@ -43,6 +43,7 @@ class LeetCodeProblem(models.Model):
         choices=STATUS_CHOICES,
         default="in_progress",
     )
+    tags = models.ManyToManyField("tags.Tag", blank=True, related_name="leetcode_problems")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

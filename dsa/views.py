@@ -28,15 +28,16 @@ def dsa_list_view(request: HttpRequest) -> HttpResponse:
 @login_required
 def dsa_create_view(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
-        form = DSAConceptForm(request.POST)
+        form = DSAConceptForm(request.POST, user=request.user)
         if form.is_valid():
             concept = form.save(commit=False)
             concept.user = request.user
             concept.save()
+            form.save_m2m()
             messages.success(request, "DSA concept added successfully.")
             return redirect("dsa:list")
     else:
-        form = DSAConceptForm()
+        form = DSAConceptForm(user=request.user)
 
     return render(request, "dsa/new.html", {"form": form})
 
@@ -59,13 +60,13 @@ def dsa_edit_view(request: HttpRequest, pk: str) -> HttpResponse:
         user=request.user,
     )
     if request.method == "POST":
-        form = DSAConceptForm(request.POST, instance=concept)
+        form = DSAConceptForm(request.POST, instance=concept, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, "DSA concept updated successfully.")
             return redirect("dsa:detail", pk=concept.pk)
     else:
-        form = DSAConceptForm(instance=concept)
+        form = DSAConceptForm(instance=concept, user=request.user)
 
     context: dict[str, object] = {
         "form": form,

@@ -86,6 +86,7 @@ class JobApplication(models.Model):
     due_date = models.DateField(blank=True, null=True)
     applied_toggle = models.BooleanField(default=False)
     date_applied = models.DateField(blank=True, null=True)
+    tags = models.ManyToManyField("tags.Tag", blank=True, related_name="job_applications")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -1,0 +1,127 @@
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #ece1d1;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    font-family: 'Inter', sans-serif;
+    border: 1px solid #2A2A2A !important;
+    border-radius: 8px;
+    background: #201b11 !important;
+    color: #ece1d1 !important;
+    color-scheme: dark;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-sizing: border-box;
+}
+
+.form-input::placeholder {
+    color: #9b8f79;
+}
+
+.form-input:focus {
+    border-color: #EAB308;
+    box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.15);
+    background: #241f15;
+}
+
+.field-error {
+    font-size: 0.75rem;
+    color: #ffb4ab;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.field-help {
+    font-size: 0.75rem;
+    color: #9b8f79;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+select.form-input {
+    appearance: none;
+    cursor: pointer;
+}
+
+select.form-input[multiple] {
+    padding: 6px;
+    min-height: 120px;
+}
+
+select.form-input[multiple] option {
+    padding: 6px 10px;
+    border-radius: 4px;
+    margin-bottom: 2px;
+}
+
+select.form-input[multiple] option:checked {
+    background: rgba(234, 179, 8, 0.2);
+    color: #EAB308;
+}
+
+select.form-input optgroup {
+    font-weight: 600;
+    color: #ece1d1;
+    background: #1A1A1A;
+}
+
+select.form-input option {
+    font-weight: 400;
+    color: #ece1d1;
+    background: #201b11;
+}
+
+.color-presets {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.color-preset {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s;
+}
+
+.color-preset:hover {
+    transform: scale(1.15);
+}
+
+.color-preset.active {
+    border-color: #ece1d1;
+    transform: scale(1.15);
+}
+
+.tag-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: opacity 0.15s;
+    text-decoration: none;
+}
+
+.tag-pill:hover {
+    opacity: 0.85;
+}
+
+.tag-select-form select[multiple] {
+    min-height: 140px;
+}

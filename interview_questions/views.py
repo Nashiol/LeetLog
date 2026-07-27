@@ -19,15 +19,16 @@ def interview_list_view(request: HttpRequest) -> HttpResponse:
 @login_required
 def interview_create_view(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
-        form = InterviewQuestionForm(request.POST)
+        form = InterviewQuestionForm(request.POST, user=request.user)
         if form.is_valid():
             question = form.save(commit=False)
             question.user = request.user
             question.save()
+            form.save_m2m()
             messages.success(request, "Interview question added successfully.")
             return redirect("interview_questions:list")
     else:
-        form = InterviewQuestionForm()
+        form = InterviewQuestionForm(user=request.user)
 
     return render(request, "interview_questions/new.html", {"form": form})
 
@@ -50,13 +51,13 @@ def interview_edit_view(request: HttpRequest, pk: str) -> HttpResponse:
         user=request.user,
     )
     if request.method == "POST":
-        form = InterviewQuestionForm(request.POST, instance=question)
+        form = InterviewQuestionForm(request.POST, instance=question, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, "Interview question updated successfully.")
             return redirect("interview_questions:detail", pk=question.pk)
     else:
-        form = InterviewQuestionForm(instance=question)
+        form = InterviewQuestionForm(instance=question, user=request.user)
 
     context: dict[str, object] = {
         "form": form,

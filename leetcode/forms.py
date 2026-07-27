@@ -6,6 +6,12 @@ from .models import LeetCodeProblem
 
 
 class LeetCodeProblemForm(forms.ModelForm):
+    def __init__(self, *args: object, user: object = None, **kwargs: object) -> None:
+        super().__init__(*args, **kwargs)
+        if user:
+            from tags.models import Tag
+            self.fields["tags"].queryset = Tag.objects.filter(user=user)
+
     class Meta:
         model = LeetCodeProblem
         fields = [
@@ -15,6 +21,7 @@ class LeetCodeProblemForm(forms.ModelForm):
             "solution_link",
             "difficulty",
             "programming_language",
+            "tags",
             "notes",
             "date_solved",
         ]
@@ -41,6 +48,9 @@ class LeetCodeProblemForm(forms.ModelForm):
             "programming_language": forms.TextInput(attrs={
                 "class": "form-input",
                 "placeholder": "e.g. Python, JavaScript",
+            }),
+            "tags": forms.SelectMultiple(attrs={
+                "class": "form-input",
             }),
             "notes": forms.HiddenInput(attrs={
                 "id": "notes-hidden",

@@ -4,6 +4,12 @@ from .models import JobApplication
 
 
 class JobApplicationForm(forms.ModelForm):
+    def __init__(self, *args: object, user: object = None, **kwargs: object) -> None:
+        super().__init__(*args, **kwargs)
+        if user:
+            from tags.models import Tag
+            self.fields["tags"].queryset = Tag.objects.filter(user=user)
+
     class Meta:
         model = JobApplication
         fields = [
@@ -16,6 +22,7 @@ class JobApplicationForm(forms.ModelForm):
             "job_source",
             "job_status",
             "due_date",
+            "tags",
             "job_description",
             "applied_toggle",
         ]
@@ -51,6 +58,9 @@ class JobApplicationForm(forms.ModelForm):
             "due_date": forms.DateInput(attrs={
                 "class": "form-input",
                 "type": "date",
+            }),
+            "tags": forms.SelectMultiple(attrs={
+                "class": "form-input",
             }),
             "job_description": forms.HiddenInput(attrs={
                 "id": "notes-hidden",

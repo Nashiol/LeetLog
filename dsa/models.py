@@ -31,6 +31,7 @@ class DSAConcept(models.Model):
         default="not_started",
     )
     date_studied = models.DateField()
+    tags = models.ManyToManyField("tags.Tag", blank=True, related_name="dsa_concepts")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

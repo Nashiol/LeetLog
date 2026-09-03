@@ -16,6 +16,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     '*',
+    'http://leetlog.duckdns.org',
     '13.60.221.199', 
     'ec2-13-60-221-199.eu-north-1.compute.amazonaws.com',
 ]

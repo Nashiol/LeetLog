@@ -15,7 +15,12 @@ SECRET_KEY = config("SECRET_KEY", default="django-insecure-#o#r!xe+-p(3hs^2&ixi-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", cast=bool, default=True)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1").split(",")
+DEBUG = False
+ALLOWED_HOSTS = [
+    '*',
+    '13.60.221.199', 
+    'ec2-13-60-221-199.eu-north-1.compute.amazonaws.com',
+]
 
 
 # Application definition
